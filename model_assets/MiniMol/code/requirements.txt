@@ -1,0 +1,22 @@
+# MiniMol Requirements
+# ---------------------
+# Environment setup:
+#   conda create -n minimol_env python=3.11
+#   conda activate minimol_env
+#
+# Step 1 — Install PyTorch:
+#   pip install torch==2.9.0
+#
+# Step 2 — Install PyG packages with correct CUDA wheel:
+#   pip install torch-scatter torch-sparse torch-cluster -f https://pytorch-geometric.com/whl/torch-2.9.0+cu126.html
+#
+# Step 3 — Install remaining dependencies:
+#   pip install -r requirements.txt
+
+torch-geometric
+minimol
+PyTDC
+scikit-learn
+numpy
+pandas
+joblib
