@@ -1,0 +1,11 @@
+torch==2.4.0
+torch-scatter
+torch-sparse
+torch-cluster
+torch-geometric
+minimol
+PyTDC
+scikit-learn
+numpy
+pandas
+deepchem
