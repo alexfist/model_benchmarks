@@ -24,7 +24,7 @@ This project reproduces and evaluates five models from the TDC leaderboard acros
 ## Repository Structure
 
 ```
-minimol_benchmark/
+model_benchmarks/
 │
 ├── README.md                        # This file
 │
