@@ -1,0 +1,29 @@
+# DeepMol Requirements
+# ---------------------
+# Environment setup:
+#   conda create -n deepmol_env python=3.10
+#   conda activate deepmol_env
+#
+# Step 1 — Install RDKit via conda (required before pip installs):
+#   conda install -c conda-forge rdkit
+#
+# Step 2 — Install DeepMol modules:
+#   pip install "deepmol[preprocessing]"
+#   pip install "deepmol[machine-learning]"
+#   pip install "deepmol[deep-learning]"
+#
+# Step 3 — Install Mol2Vec:
+#   pip install git+https://github.com/samoturk/mol2vec#egg=mol2vec
+#
+# Step 4 — Install remaining dependencies:
+#   pip install -r requirements.txt
+#
+# WARNING: Do NOT install JAX — it causes dependency conflicts with DeepMol
+# WARNING: TensorFlow models do not work on MacOS — use Linux only
+
+PyTDC
+numpy
+pandas
+scikit-learn
+joblib
+xgboost
