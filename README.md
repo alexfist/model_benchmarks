@@ -15,9 +15,8 @@ This project reproduces and evaluates five models from the TDC leaderboard acros
 - ZairaChem
 - AttrMasking
 
-**Benchmark groups:**
+**Benchmark group:**
 - ADMET Benchmark Group (22 tasks)
-- Toxicity Group
 
 ---
 
@@ -27,6 +26,8 @@ This project reproduces and evaluates five models from the TDC leaderboard acros
 model_benchmarks/
 │
 ├── README.md                        # This file
+│
+├── run_all.sh                       # Bash script to run all models AFTER environment intialization
 │
 ├── results/
 │   ├── summary_by_model.csv         # Per-model performance across all tasks
@@ -56,7 +57,7 @@ model_benchmarks/
 
 ### 1. Environment Setup
 
-Each model has its own `requirements.txt` inside its `code/` folder. It is recommended to create a separate conda environment per model to avoid dependency conflicts.
+Each model has its own `requirements.txt` inside its `code/` folder. You MUST create a separate conda environment per model to avoid dependency conflicts.
 
 ```bash
 conda create -n <model_name>_env python=3.10
@@ -66,14 +67,14 @@ pip install -r model_assets/<model_name>/code/requirements.txt
 
 ### 2. Running a Model
 
-Each model folder contains a `run_benchmark.py` script that loops through all TDC ADMET tasks automatically.
+Each model folder contains a `run_benchmark.py` script that trains and evaluates the model through all 22 ADMET tasks individually. Note: for the ZairaChem model, regression tasks are left out and only classification tasks are included.
 
 ```bash
 cd model_assets/<model_name>/code
 python run_benchmark.py
 ```
 
-Results are saved to `../logs/` and `../artifacts/`.
+Results are saved to `../logs/` and `../artifacts/`. These include some basic toying with the hyperparameters
 
 ### 3. Generating Summary Reports
 
@@ -119,21 +120,22 @@ Example format:
 
 | | Details |
 |---|---|
-| OS | Linux (Ubuntu 22.04) |
-| GPU | |
-| CUDA Version | |
-| Python Version | |
-| Run Date | |
+| OS | N/A |
+| GPU | N/A |
+| CUDA Version | N/A |
+| Python Version | N/A |
+| Run Date | N/A |
 
 ---
 
 ## Notes
 
 - All tasks use TDC's default scaffold split for fair comparison
-- Each task is run 3 times with different random seeds; mean ± std is reported
+- Each task is run 5 times with random seeds 1,2,3,4,5 as outlined in the TDC requirements; mean ± std is reported afterwards
 - Training time and GPU memory are measured per task per model
 - Models with known data leakage issues (e.g. MiniMol) are noted in their individual README
-
+- If your device has no GPU, then it is recommended to modify the AttrMasking model such that its parameter grid is 2x2 instead of 4x4. All other models should run fine on CPU only.
+- Additionally, if you have a slower computer, it is recommended to run each model benchmark individually instead of running the bash script.
 ---
 
 ## References
