@@ -1,0 +1,22 @@
+# ZairaChem Requirements
+# ----------------------
+# ZairaChem manages its own conda environments via install script.
+# This file covers only the additional dependencies needed for the benchmark runner.
+#
+# Full setup:
+#   git clone https://github.com/ersilia-os/zaira-chem.git
+#   cd zaira-chem
+#   bash install_linux.sh        ← Linux only, creates 'zairachem' conda env
+#   conda activate zairachem
+#   pip install -r requirements.txt
+#
+# NOTE: ZairaChem v1 supports classification tasks only.
+# Regression tasks in the ADMET benchmark will be skipped.
+#
+# NOTE: Linux only — install script requires bash and is not Mac/Windows compatible.
+
+PyTDC
+pandas
+numpy
+scikit-learn
+joblib
