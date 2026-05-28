@@ -8,7 +8,7 @@
 #   conda install -c conda-forge rdkit
 #
 # Step 2 — Install DGL (CPU version):
-#   pip install dgl -f https://data.dgl.ai/wheels/torch-2.1/repo.html
+#   pip install dgl -f https://data.dgl.ai/wheels/torch-2.1/cpu/repo.html
 #
 # Step 3 — Install dgllife:
 #   pip install dgllife

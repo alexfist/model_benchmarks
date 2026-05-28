@@ -11,7 +11,7 @@
 # Step 2 — Install dependencies in this order:
 #   pip install catboost rdkit PyTDC scikit-learn joblib numpy pandas
 #   pip install molfeat
-#   pip install dgl -f https://data.dgl.ai/wheels/torch-2.10/repo.html
+#   pip install dgl -f https://data.dgl.ai/wheels/torch-2.10/cpu/repo.html
 #   pip install dgllife
 #
 # NOTE: Do NOT use molfeat[all] — it fails to build on most systems
