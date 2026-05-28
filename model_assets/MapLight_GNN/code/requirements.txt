@@ -1,0 +1,30 @@
+# MapLight + GNN Requirements
+# ----------------------------
+# Environment setup (use mamba, not conda):
+#   mamba create -n maplight_env python=3.10 -y
+#   mamba activate maplight_env
+#   mamba install jupyterlab -y
+#
+# Step 1 — Clone MapLight repo:
+#   git clone https://github.com/maplightrx/MapLight-TDC.git
+#
+# Step 2 — Install dependencies in this order:
+#   pip install catboost rdkit PyTDC scikit-learn joblib numpy pandas
+#   pip install molfeat
+#   pip install dgl -f https://data.dgl.ai/wheels/torch-2.10/repo.html
+#   pip install dgllife
+#
+# NOTE: Do NOT use molfeat[all] — it fails to build on most systems
+# NOTE: Install DGL separately after molfeat core, not together
+# NOTE: Use mamba, not conda — dependency resolution is more reliable
+# NOTE: Not runnable on Google Colab or Kaggle due to molfeat/DGL conflicts
+
+catboost
+molfeat
+dgllife
+rdkit
+PyTDC
+numpy
+pandas
+scikit-learn
+joblib
