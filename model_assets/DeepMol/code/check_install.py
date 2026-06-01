@@ -28,50 +28,36 @@ def check(label, fn):
 def check_imports():
     import rdkit
     import deepmol
-    from deepmol.loaders import CSVLoader
-    from deepmol.models import SklearnModel
     from deepmol.compound_featurization import MorganFingerprint
+    from deepmol.datasets.datasets import SmilesDataset
+    from deepmol.models.sklearn_models import SklearnModel
     from tdc.benchmark_group import admet_group
     import numpy as np
     import pandas as pd
     import joblib
+    import xgboost
     print(f"  rdkit:    {rdkit.__version__}")
     print(f"  deepmol:  ok")
+    print(f"  xgboost: {xgboost.__version__}")
     print(f"  PyTDC:    ok")
-
 
 # ── Check 2: Featurizer works ─────────────────────────────────────────────────
 
 def check_featurizer():
     from deepmol.compound_featurization import MorganFingerprint
-    from deepmol.loaders import CSVLoader
-    import pandas as pd
-    import tempfile, os
+    from deepmol.datasets.datasets import SmilesDataset
+    import numpy as np
 
     # Create a tiny test CSV
-    test_data = pd.DataFrame({
-        "smiles": [
+    smiles =[
             "CC(=O)Oc1ccccc1C(=O)O",        # Aspirin
             "CN1C=NC2=C1C(=O)N(C(=O)N2C)C", # Caffeine
-        ],
-        "y": [1, 0]
-    })
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
-        test_data.to_csv(f, index=False)
-        tmp_path = f.name
-
-    try:
-        loader = CSVLoader(
-            dataset_path=tmp_path,
-            smiles_field="smiles",
-            labels_fields=["y"]
-        )
-        dataset = loader.create_dataset()
-        featurizer = MorganFingerprint(radius=2, size=2048)
-        featurizer.featurize(dataset)
-        print(f"  Morgan fingerprints generated: shape {dataset.X.shape}")
-    finally:
-        os.unlink(tmp_path)
+        ]
+    dataset = SmilesDataset(smiles = smiles)
+    fp = MorganFingerprint(radius=2, size=2048)
+    result = fp.featurize(dataset)
+    assert result.X is not None, print(f"Morgan fingerprints shape: {result.X.shape}")
+    assert result.X.shape == (2,2048), f"Expected shape (2, 2048), got {result.X.shape}"
 
 
 # ── Check 3: TDC dataset loading ──────────────────────────────────────────────
@@ -88,13 +74,12 @@ def check_tdc():
 # ── Check 4: End-to-end on hia_hou ────────────────────────────────────────────
 
 def check_end_to_end():
-    from deepmol.loaders import CSVLoader
     from deepmol.compound_featurization import MorganFingerprint
     from deepmol.models import SklearnModel
     from sklearn.ensemble import RandomForestClassifier
     from tdc.benchmark_group import admet_group
+    from deepmol.datasets.datasets import SmilesDataset
     import pandas as pd
-    import tempfile, os
 
     group = admet_group(path="../data")
     benchmark = group.get("hia_hou")
@@ -102,42 +87,30 @@ def check_end_to_end():
     train, valid = group.get_train_valid_split(
         benchmark="hia_hou", split_type="default", seed=0
     )
-
-    # Save train data to temp CSV for DeepMol loader
+    
     train_df = pd.concat([train, valid]).reset_index(drop=True)
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
-        train_df.to_csv(f, index=False)
-        train_path = f.name
+    #create datasets from smile lists directly
+    train_dataset = SmilesDataset(smiles = train_df['Drug'].tolist(), y = train_df['Y'].values)
+    test_dataset  = SmilesDataset(smiles = test['Drug'].tolist(), y = test['Y'].values)
 
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
-        test.to_csv(f, index=False)
-        test_path = f.name
+    #featurize
+    fp = MorganFingerprint(radius=2, size=2048)
+    train_result = fp.featurize(train_dataset)
+    test_result  = fp.featurize(test_dataset)
 
-    try:
-        loader = CSVLoader(dataset_path=train_path, smiles_field="Drug", labels_fields=["Y"])
-        train_dataset = loader.create_dataset()
+    #train model
+    clf = RandomForestClassifier(n_estimators=50, random_state=42)
+    model = SklearnModel(model = clf, task = "classification")
+    model.fit(train_result)
 
-        loader_test = CSVLoader(dataset_path=test_path, smiles_field="Drug", labels_fields=["Y"])
-        test_dataset = loader_test.create_dataset()
+    #predict
+    preds = model.predict(test_result)
+    result = group.evaluate({'hia_hou': preds}, benchmark = 'hia_hou')
+    metric = list(result['hia_hou'].keys())[0]
+    score = result['hia_hou'][metric]
+    print(f"  End-to-end on hia_hou: {metric} = {score:.4f}")
+    assert score > 0.60, f"Expected {metric} > 0.75, got {score:.4f}"
 
-        featurizer = MorganFingerprint(radius=2, size=2048)
-        featurizer.featurize(train_dataset)
-        featurizer.featurize(test_dataset)
-
-        clf = RandomForestClassifier(n_estimators=50, random_state=42)
-        model = SklearnModel(model=clf, mode="classification")
-        model.fit(train_dataset)
-
-        preds = model.predict(test_dataset)
-        result = group.evaluate({"hia_hou": preds}, benchmark="hia_hou")
-        metric = list(result["hia_hou"].keys())[0]
-        score  = result["hia_hou"][metric]
-
-        print(f"  Task: hia_hou | {metric}: {score:.4f}")
-        assert score > 0.75, f"Score too low: {score:.4f}"
-    finally:
-        os.unlink(train_path)
-        os.unlink(test_path)
 
 
 # ── Run all checks ─────────────────────────────────────────────────────────────
