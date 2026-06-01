@@ -19,15 +19,14 @@ import json
 import time
 import argparse
 import traceback
-import tempfile
 import numpy as np
 import pandas as pd
 import joblib
 from datetime import datetime
 
 from tdc.benchmark_group import admet_group
-from deepmol.loaders import CSVLoader
-from deepmol.feature_engineering import MorganFingerprint, RDKitDescriptors
+from deepmol.datasets.datasets import SmilesDataset
+from deepmol.compound_featurization import MorganFingerprint
 from deepmol.models import SklearnModel
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.metrics import roc_auc_score, mean_absolute_error
@@ -48,20 +47,11 @@ def get_gpu_memory_mib():
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
 
-def df_to_deepmol_dataset(df, smiles_field="Drug", label_field="Y"):
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
-        df.to_csv(f, index=False)
-        tmp_path = f.name
-    loader = CSVLoader(
-        dataset_path=tmp_path,
-        smiles_field=smiles_field,
-        labels_fields=[label_field]
-    )
-    dataset = loader.create_dataset()
-    os.unlink(tmp_path)
-    return dataset
+def make_dataset(smiles, labels = None):
+    return SmilesDataset(smiles=smiles, y=labels)
 
-
+def featurize_dataset(dataset, featurizer):
+    return featurizer.featurize(dataset)
 def is_classification_task(y):
     unique_vals = np.unique(y)
     return len(unique_vals) <= 2 or set(unique_vals).issubset({0, 1})
@@ -79,7 +69,6 @@ def run_deepmol(train, valid, test, task_name, logs_dir):
     featurizers = {
         "morgan_2048": MorganFingerprint(radius=2, size=2048),
         "morgan_1024": MorganFingerprint(radius=2, size=1024),
-        "rdkit_desc":  RDKitDescriptors(),
     }
 
     if is_clf:
@@ -103,8 +92,8 @@ def run_deepmol(train, valid, test, task_name, logs_dir):
     best_feat_name = None
     higher_is_better = is_clf
 
-    train_dataset = df_to_deepmol_dataset(train)
-    valid_dataset = df_to_deepmol_dataset(valid)
+    train_dataset = make_dataset(train["Drug"].tolist(), train["Y"].tolist())
+    valid_dataset = make_dataset(valid["Drug"].tolist(), valid["Y"].tolist())
 
     for feat_name, featurizer in featurizers.items():
         try:
@@ -165,11 +154,12 @@ def run_deepmol(train, valid, test, task_name, logs_dir):
 
     # Retrain on train + valid combined
     train_valid_df      = pd.concat([train, valid]).reset_index(drop=True)
-    train_valid_dataset = df_to_deepmol_dataset(train_valid_df)
-    test_dataset        = df_to_deepmol_dataset(test)
+    train_valid_dataset = make_dataset(train_valid_df["Drug"].tolist(), train_valid_df["Y"].tolist())
+    test_dataset        = make_dataset(test["Drug"].tolist(), test["Y"].tolist())
 
-    featurizers[best_feat_name].featurize(train_valid_dataset)
-    featurizers[best_feat_name].featurize(test_dataset)
+    train_valid_dataset = featurize_dataset(train_valid_dataset, featurizers[best_feat_name])
+    test_dataset        = featurize_dataset(test_dataset, featurizers[best_feat_name])
+   
 
     best_model.fit(train_valid_dataset)
     preds = best_model.predict(test_dataset)
