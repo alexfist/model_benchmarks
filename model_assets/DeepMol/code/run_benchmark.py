@@ -1,12 +1,17 @@
 """
-run_benchmark.py (DeepMol v3)
-------------------------------
+run_benchmark.py (DeepMol)
+--------------------------
 Runs DeepMol (AutoML) across all 22 TDC ADMET tasks.
 
 Usage:
     python run_benchmark.py
     python run_benchmark.py --runs 5
     python run_benchmark.py --task hia_hou
+
+Outputs:
+    ../data/          TDC datasets (auto-downloaded)
+    ../logs/          per-task JSON result logs + tuning logs
+    ../artifacts/     saved model.pkl + hyperparams.json per task
 """
 
 import os
@@ -42,15 +47,11 @@ def get_gpu_memory_mib():
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
 
-def make_dataset(smiles, labels=None):
+def make_dataset(smiles, labels = None):
     return SmilesDataset(smiles=smiles, y=labels)
 
-
 def featurize_dataset(dataset, featurizer):
-    """Featurize dataset — returns a NEW dataset with features filled in."""
     return featurizer.featurize(dataset)
-
-
 def is_classification_task(y):
     unique_vals = np.unique(y)
     return len(unique_vals) <= 2 or set(unique_vals).issubset({0, 1})
@@ -59,64 +60,60 @@ def is_classification_task(y):
 # ── DeepMol AutoML runner ─────────────────────────────────────────────────────
 
 def run_deepmol(train, valid, test, task_name, logs_dir):
+    """
+    Tries multiple featurizer + model combos on validation set.
+    Returns: preds, best_model, best_combo_label
+    """
     is_clf = is_classification_task(train["Y"].values)
 
-    featurizer_configs = {
+    featurizers = {
         "morgan_2048": MorganFingerprint(radius=2, size=2048),
         "morgan_1024": MorganFingerprint(radius=2, size=1024),
     }
 
     if is_clf:
-        model_configs = {
+        models = {
             "rf_100": RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1),
             "rf_200": RandomForestClassifier(n_estimators=200, random_state=42, n_jobs=-1),
             "xgb":    xgb.XGBClassifier(n_estimators=100, random_state=42,
-                                          use_label_encoder=False, eval_metric="logloss"),
+                                         use_label_encoder=False, eval_metric="logloss"),
         }
     else:
-        model_configs = {
+        models = {
             "rf_100": RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1),
             "rf_200": RandomForestRegressor(n_estimators=200, random_state=42, n_jobs=-1),
             "xgb":    xgb.XGBRegressor(n_estimators=100, random_state=42),
         }
 
-    tuning_logs      = []
-    best_score       = None
-    best_combo       = None
-    best_model       = None
-    best_feat_name   = None
+    tuning_logs    = []
+    best_score     = None
+    best_combo     = None
+    best_model     = None
+    best_feat_name = None
     higher_is_better = is_clf
 
-    # Create base datasets — featurize separately per featurizer
     train_dataset = make_dataset(train["Drug"].tolist(), train["Y"].tolist())
     valid_dataset = make_dataset(valid["Drug"].tolist(), valid["Y"].tolist())
 
-    for feat_name, featurizer in featurizer_configs.items():
+    for feat_name, featurizer in featurizers.items():
         try:
-            # Featurize — capture return value
             train_feat = featurize_dataset(train_dataset, featurizer)
             valid_feat = featurize_dataset(valid_dataset, featurizer)
-
-            if train_feat is None or train_feat.X is None:
-                print(f"     {feat_name} returned None — skipping")
-                continue
-
+            if train_feat is None or valid_feat is None:
+                print(f"    Featurizer {feat_name} failed during featurization.")
         except Exception as e:
             print(f"     Featurizer {feat_name} failed: {e}")
             continue
 
-        for model_name, clf in model_configs.items():
+        for model_name, clf in models.items():
             combo_label = f"{feat_name}+{model_name}"
             try:
                 dm_model = SklearnModel(
                     model=clf,
                     task="classification" if is_clf else "regression"
                 )
-                dm_model.fit(train_feat)
-                val_preds = dm_model.predict(valid_feat)
-
-                # Ensure predictions are a 1D array
-                val_preds = np.array(val_preds).flatten()
+                dm_model.fit(train_dataset)
+                val_preds = dm_model.predict(valid_dataset)
 
                 val_score = (roc_auc_score(valid["Y"].values, val_preds) if is_clf
                              else mean_absolute_error(valid["Y"].values, val_preds))
@@ -145,40 +142,30 @@ def run_deepmol(train, valid, test, task_name, logs_dir):
                 tuning_logs.append({"combo": combo_label, "error": str(e)})
 
     # Save tuning log
-    with open(os.path.join(logs_dir, f"{task_name}_tuning.json"), "w") as f:
+    tuning_log_path = os.path.join(logs_dir, f"{task_name}_tuning.json")
+    with open(tuning_log_path, "w") as f:
         json.dump({
             "task":           task_name,
             "model":          "DeepMol",
             "tuning_runs":    tuning_logs,
             "best_combo":     best_combo,
-            "best_val_score": round(float(best_score), 4) if best_score is not None else None,
+            "best_val_score": round(float(best_score), 4) if best_score else None,
         }, f, indent=2)
-
-    if best_model is None:
-        raise RuntimeError(
-            f"All featurizer+model combinations failed for {task_name}. "
-            f"Check {os.path.join(logs_dir, task_name + '_tuning.json')}"
-        )
 
     print(f"   Best: {best_combo} | val: {best_score:.4f}")
 
     # Retrain on train + valid combined
     train_valid_df      = pd.concat([train, valid]).reset_index(drop=True)
-    train_valid_dataset = make_dataset(
-        train_valid_df["Drug"].tolist(),
-        train_valid_df["Y"].tolist()
-    )
-    test_dataset = make_dataset(test["Drug"].tolist(), test["Y"].tolist())
+    train_valid_dataset = make_dataset(train_valid_df["Drug"].tolist(), train_valid_df["Y"].tolist())
+    test_dataset        = make_dataset(test["Drug"].tolist(), test["Y"].tolist())
 
-    # Featurize with best featurizer — capture return values
-    train_valid_feat = featurize_dataset(train_valid_dataset, featurizer_configs[best_feat_name])
-    test_feat        = featurize_dataset(test_dataset, featurizer_configs[best_feat_name])
+    train_valid_dataset = featurize_dataset(train_valid_dataset, featurizers[best_feat_name])
+    test_dataset        = featurize_dataset(test_dataset, featurizers[best_feat_name])
+   
 
-    best_model.fit(train_valid_feat)
-    preds = best_model.predict(test_feat)
-
-    # Ensure predictions are a 1D array
-    preds = np.array(preds).flatten()
+    best_model.fit(train_valid_dataset)
+    preds = best_model.predict(test_dataset)
+    preds = np.array(preds).flatten
 
     return preds, best_model, best_combo
 
