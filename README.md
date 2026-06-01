@@ -59,6 +59,18 @@ model_benchmarks/
 
 Each model has its own `requirements.txt` inside its `code/` folder. You MUST create a separate conda environment per model to avoid dependency conflicts.
 
+If you are in mainland China or want a faster PyPI mirror, configure pip to use the Tsinghua source first:
+
+```bash
+# Windows
+setup_pip_tsinghua.bat
+
+# Or manually
+pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+Then create and activate the environment, and install dependencies:
+
 ```bash
 conda create -n <model_name>_env python=3.10
 conda activate <model_name>_env
@@ -67,7 +79,18 @@ pip install -r model_assets/<model_name>/code/requirements.txt
 
 ### 2. Running a Model
 
+If you are using Windows CMD or PowerShell, run the benchmark with the Windows launcher instead of the bash script:
+
+```bat
+run_all.bat
+```
+
+The batch file resolves Conda automatically and uses the same environment names as the bash runner.
+
+
 Each model folder contains a `run_benchmark.py` script that trains and evaluates the model through all 22 ADMET tasks individually. Note: for the ZairaChem model, regression tasks are left out and only classification tasks are included.
+
+For Linux/macOS users, the existing `run_all.sh` workflow is still supported.
 
 ```bash
 cd model_assets/<model_name>/code

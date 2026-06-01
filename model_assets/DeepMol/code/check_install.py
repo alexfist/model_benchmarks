@@ -30,7 +30,7 @@ def check_imports():
     import deepmol
     from deepmol.loaders import CSVLoader
     from deepmol.models import SklearnModel
-    from deepmol.feature_engineering import MorganFingerprint
+    from deepmol.compound_featurization import MorganFingerprint
     from tdc.benchmark_group import admet_group
     import numpy as np
     import pandas as pd
@@ -43,7 +43,7 @@ def check_imports():
 # ── Check 2: Featurizer works ─────────────────────────────────────────────────
 
 def check_featurizer():
-    from deepmol.feature_engineering import MorganFingerprint
+    from deepmol.compound_featurization import MorganFingerprint
     from deepmol.loaders import CSVLoader
     import pandas as pd
     import tempfile, os
@@ -89,7 +89,7 @@ def check_tdc():
 
 def check_end_to_end():
     from deepmol.loaders import CSVLoader
-    from deepmol.feature_engineering import MorganFingerprint
+    from deepmol.compound_featurization import MorganFingerprint
     from deepmol.models import SklearnModel
     from sklearn.ensemble import RandomForestClassifier
     from tdc.benchmark_group import admet_group
