@@ -58,7 +58,7 @@ def check_imports():
 def check_fingerprints():
     from minimol import Minimol
     import torch
-
+    import numpy as np
     model = Minimol()
 
     test_molecules = [
@@ -68,9 +68,9 @@ def check_fingerprints():
     ]
 
     fps = model(test_molecules)
-    assert fps.shape == (3, 512), f"Expected shape (3, 512), got {fps.shape}"
-    print(f"  Generated fingerprints for {len(test_molecules)} molecules")
-    print(f"  Fingerprint shape: {fps.shape}")
+    fps_array = np.array(fps)
+    assert fps_array.shape == (3,512), f"Expected fingerprint shape (3,512), got {fps_array.shape}"
+    print(f"  Fingerprint shape: {fps_array.shape}")
 
 
 # ── Check 3: TDC dataset loading ──────────────────────────────────────────────

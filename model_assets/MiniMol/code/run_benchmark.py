@@ -52,9 +52,9 @@ def run_minimol(model, train, valid, test, task_name, logs_dir):
     Stage 3: Retrain best model on train+valid, predict on test.
     Returns: preds, best_clf, best_params
     """
-    train_fps = model(train["Drug"].tolist()).numpy()
-    valid_fps = model(valid["Drug"].tolist()).numpy()
-    test_fps  = model(test["Drug"].tolist()).numpy()
+    train_fps = np.array(model(train["Drug"].tolist()))
+    valid_fps = np.array(model(valid["Drug"].tolist()))
+    test_fps  = np.array(model(test["Drug"].tolist()))
 
     y_train = train["Y"].values
     y_valid = valid["Y"].values
