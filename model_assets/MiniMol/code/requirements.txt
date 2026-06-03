@@ -5,9 +5,9 @@
 #   conda activate minimol_env
 #
 # Step 1 — Install PyTorch:
-#   pip install torch==2.9.0
+#   pip install torch==2.4.0 --index-url https://download.pytorch.org/whl/cu124
 #
-# # pip install torch-scatter torch-sparse torch-cluster -f https://pytorch-geometric.com/whl/torch-2.4.0+cpu.html
+# # pip install torch-scatter torch-sparse torch-cluster -f https://pytorch-geometric.com/whl/torch-2.4.0+cu124.html
 # Step 3 — Install remaining dependencies:
 #   pip install -r requirements.txt
 
