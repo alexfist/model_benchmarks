@@ -95,6 +95,8 @@ def check_end_to_end():
     from tdc.benchmark_group import admet_group
     from sklearn.ensemble import RandomForestClassifier
     import numpy as np
+    from hydra.core.global_hydra import GlobalHydra
+    GlobalHydra.instance().clear()  # Clear any existing Hydra state
 
     group = admet_group(path="../data")
     benchmark = group.get("hia_hou")
@@ -107,9 +109,9 @@ def check_end_to_end():
     )
 
     model = Minimol()
-    train_fps = model(train["Drug"].tolist()).numpy()
-    valid_fps = model(valid["Drug"].tolist()).numpy()
-    test_fps  = model(test["Drug"].tolist()).numpy()
+    train_fps = np.array(model(train["Drug"].tolist()))
+    valid_fps = np.array(model(valid["Drug"].tolist()))
+    test_fps  = np.array(model(test["Drug"].tolist()))
 
     X = np.vstack([train_fps, valid_fps])
     y = np.concatenate([train["Y"].values, valid["Y"].values])
