@@ -46,6 +46,8 @@ def get_gpu_memory_mib():
 # ── MiniMol predictor with tuning ─────────────────────────────────────────────
 
 def run_minimol(model, train, valid, test, task_name, logs_dir):
+    from hydra.core.global_hydra import GlobalHydra
+    GlobalHydra.instance().clear()  # Clear any existing Hydra state
     """
     Stage 1: Generate MiniMol fingerprints.
     Stage 2: Grid search Random Forest hyperparams on validation set.
