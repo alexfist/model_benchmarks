@@ -10,7 +10,6 @@
 # # pip install torch-scatter==0.6.18 -f https://download.pytorch.org/whl/2.9.0+cu126.html
 # # pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-2.9.0+cu126.html
 # # pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-2.9.0+cu126.html
-torch-sparse torch-cluster -f https://pytorch-geometric.com/whl/torch-2.9.0+cu126.html
 # Step 3 — Install remaining dependencies:
 #   pip install -r requirements.txt
 #   NOTE: install numpy==1.26.4 AFTER all other packages to avoid conflicts with PyTorch.
