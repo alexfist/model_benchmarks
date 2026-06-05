@@ -4,18 +4,20 @@
 #   conda create -n attrmasking_env python=3.8
 #   conda activate attrmasking_env
 #
-# Step 1 — Install RDKit:
+# Step 1 — Install Pytorch/RDKit:
+#   pip install torch 
 #   conda install -c conda-forge rdkit
 #
 # Step 2 — Install DGL (CPU version):
-#   pip install dgl -f https://data.dgl.ai/wheels/torch-2.1/cpu/repo.html
+#   pip install dgl -f https://data.dgl.ai/wheels/torch-2.1/cu126/repo.html
 #
 # Step 3 — Install dgllife:
 #   pip install dgllife
 #
 # Step 4 — Install DeepPurpose:
-#   pip install git+https://github.com/bp-kelley/descriptastorus
+#   pip install descriptastorus
 #   pip install DeepPurpose
+#   pip install pydantic
 #
 # Step 5 — Install remaining dependencies:
 #   pip install -r requirements.txt
@@ -24,7 +26,6 @@
 # on first run from the dgllife model zoo.
 
 PyTDC
-torch
 numpy
 pandas
 scikit-learn

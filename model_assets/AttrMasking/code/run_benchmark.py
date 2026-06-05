@@ -146,7 +146,6 @@ def run_attrmasking(train, valid, test, task_name, logs_dir):
         train_epoch=best_params["epochs"],
         LR=best_params["lr"],
         batch_size=32,
-        binary=is_clf,
     )
     final_model = CompoundPred.model_initialize(**config)
     final_model.train(train_valid_dp, test_dp, test_dp)
