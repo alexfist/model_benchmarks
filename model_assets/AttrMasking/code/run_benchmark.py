@@ -13,8 +13,14 @@ Outputs:
     ../logs/          per-task JSON result logs + tuning logs
     ../artifacts/     saved model + hyperparams.json per task
 """
+import dgl.data.utils
+_original_download = dgl.data.utils.download
+def _patched_download(url, path=None, overwrite=False, **kwargs):
+    return _original_download(url,path=path, overwrite=overwrite, **kwargs)
+dgl.data.utils.download = _patched_download
 
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import json
 import time
 import argparse
@@ -88,7 +94,6 @@ def run_attrmasking(train, valid, test, task_name, logs_dir):
                 train_epoch=params["epochs"],
                 LR=params["lr"],
                 batch_size=32,
-                binary=is_clf,
             )
             model = CompoundPred.model_initialize(**config)
             model.train(train_dp, valid_dp, valid_dp)
@@ -145,7 +150,7 @@ def run_attrmasking(train, valid, test, task_name, logs_dir):
         drug_encoding=drug_encoding,
         train_epoch=best_params["epochs"],
         LR=best_params["lr"],
-        batch_size=32,
+        batch_size=32
     )
     final_model = CompoundPred.model_initialize(**config)
     final_model.train(train_valid_dp, test_dp, test_dp)

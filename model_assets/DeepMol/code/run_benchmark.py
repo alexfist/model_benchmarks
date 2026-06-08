@@ -48,6 +48,8 @@ def get_gpu_memory_mib():
 # ── Helpers ────────────────────────────────────────────────────────────────────
 
 def make_dataset(smiles, labels = None):
+    if labels is not None:
+        labels = list(labels)
     return SmilesDataset(smiles=smiles, y=labels)
 
 def featurize_dataset(dataset, featurizer):
@@ -99,6 +101,7 @@ def run_deepmol(train, valid, test, task_name, logs_dir):
         try:
             train_feat = featurize_dataset(train_dataset, featurizer)
             valid_feat = featurize_dataset(valid_dataset, featurizer)
+            print(f"train_feat: {type(train_feat)}, X: {type(train_feat.X) if train_feat is not None else 'none'}")
             if train_feat is None or valid_feat is None:
                 print(f"    Featurizer {feat_name} failed during featurization.")
         except Exception as e:
@@ -112,8 +115,11 @@ def run_deepmol(train, valid, test, task_name, logs_dir):
                     model=clf,
                     task="classification" if is_clf else "regression"
                 )
-                dm_model.fit(train_dataset)
-                val_preds = dm_model.predict(valid_dataset)
+                dm_model.fit(train_feat)
+                if is_clf:
+                    val_preds = np.array(dm_model.predict_proba(valid_feat))
+                else:
+                    val_preds = np.array(dm_model.predict(valid_feat)).flatten()
 
                 val_score = (roc_auc_score(valid["Y"].values, val_preds) if is_clf
                              else mean_absolute_error(valid["Y"].values, val_preds))
@@ -164,8 +170,10 @@ def run_deepmol(train, valid, test, task_name, logs_dir):
    
 
     best_model.fit(train_valid_dataset)
-    preds = best_model.predict(test_dataset)
-    preds = np.array(preds).flatten
+    if is_clf:
+        preds = np.array(best_model.predict_proba(test_dataset))
+    else:
+        preds = np.array(best_model.predict(test_dataset)).flatten()
 
     return preds, best_model, best_combo
 

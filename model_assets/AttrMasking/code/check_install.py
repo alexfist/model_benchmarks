@@ -6,8 +6,15 @@ Verifies AttrMasking (DeepPurpose) is installed correctly.
 Usage:
     python check_install.py
 """
+import dgl.data.utils
+_original_download = dgl.data.utils.download
+def _patched_download(url, path=None, overwrite=False, **kwargs):
+    return _original_download(url,path=path, overwrite=overwrite, **kwargs)
+dgl.data.utils.download = _patched_download
 
 import sys
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 PASS = "  ✓ PASS"
 FAIL = "  ✗ FAIL"
@@ -103,7 +110,6 @@ def check_end_to_end():
         train_epoch=2,   # just 2 epochs for the check
         LR=0.001,
         batch_size=32,
-        binary=True,
     )
 
     model = CompoundPred.model_initialize(**config)
