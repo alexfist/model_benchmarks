@@ -53,7 +53,7 @@ def is_classification_task(y):
 def build_transformers():
     print("Loading feature transformers...")
     transformers = {
-        "ecfp":   MoleculeTransformer("ecfp:4"),
+        "ecfp":   MoleculeTransformer("ecfp"),
         "avalon": MoleculeTransformer("avalon"),
         "erg":    MoleculeTransformer("erg"),
         "desc2d": MoleculeTransformer("desc2D"),

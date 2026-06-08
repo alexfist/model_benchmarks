@@ -52,7 +52,7 @@ def check_fingerprints():
     ]
 
     # ECFP
-    ecfp = MoleculeTransformer("ecfp:4")
+    ecfp = MoleculeTransformer("ecfp")
     ecfp_fps = ecfp(test_smiles)
     print(f"  ECFP fingerprints shape:   {np.array(ecfp_fps).shape}")
 
@@ -114,7 +114,7 @@ def check_end_to_end():
     test_smiles  = test["Drug"].tolist()
 
     # Generate features
-    ecfp    = MoleculeTransformer("ecfp:4")
+    ecfp    = MoleculeTransformer("ecfp")
     avalon  = MoleculeTransformer("avalon")
     desc2d  = MoleculeTransformer("desc2D")
     gin     = PretrainedDGLTransformer(kind="gin_supervised_masking", dtype=float)

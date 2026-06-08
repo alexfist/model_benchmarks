@@ -1,30 +1,41 @@
-# MapLight + GNN Requirements
-# ----------------------------
-# Environment setup (use mamba, not conda):
-#   mamba create -n maplight_env python=3.10 -y
-#   mamba activate maplight_env
-#   mamba install jupyterlab -y
+# MapLight + GNN Requirements (Linux, CUDA 12.8, tested on H100)
+# --------------------------------------------------------------
+# Environment: Python 3.10
 #
-# Step 1 — Clone MapLight repo:
-#   git clone https://github.com/maplightrx/MapLight-TDC.git
+# Install in this exact order:
 #
-# Step 2 — Install dependencies in this order:
-#   pip install catboost rdkit PyTDC scikit-learn joblib numpy pandas
+# Step 1 — Install PyTDC first:
+#   pip install PyTDC
+#
+# Step 2 — Install core dependencies:
+#   pip install catboost rdkit scikit-learn joblib pandas==2.1.4 numpy==1.26.4
+#
+# Step 3 — Install molfeat:
 #   pip install molfeat
-#   pip install dgl -f https://data.dgl.ai/wheels/torch-2.10/cpu/repo.html
+#
+# Step 4 — Install DGL matching torch 2.12 + CUDA 12.6:
+#   conda install -c dglteam/label/th212_cu126 dgl -y
 #   pip install dgllife
 #
-# NOTE: Do NOT use molfeat[all] — it fails to build on most systems
-# NOTE: Install DGL separately after molfeat core, not together
-# NOTE: Use mamba, not conda — dependency resolution is more reliable
-# NOTE: Not runnable on Google Colab or Kaggle due to molfeat/DGL conflicts
+# Step 5 — Set CUDA library path:
+#   export LD_LIBRARY_PATH=/opt/miniforge3/envs/minimol_env/lib/python3.11/site-packages/nvidia/cuda_runtime/lib:$LD_LIBRARY_PATH
+#
+# Step 6 — Install remaining:
+#   pip install "fsspec[http]<=2024.3.1"
+#   pip install scipy==1.13.0
+#
+# NOTE: molfeat featurizer name is 'ecfp' not 'ecfp:4'
+# NOTE: numpy must be pinned to 1.26.4 — newer versions break scipy and pandas
+# NOTE: Install PyTDC FIRST before other packages
+# NOTE: DGL requires LD_LIBRARY_PATH to be set for CUDA libraries
 
 catboost
 molfeat
 dgllife
 rdkit
 PyTDC
-numpy
-pandas
+numpy==1.26.4
+pandas==2.1.4
+scipy==1.13.0
 scikit-learn
 joblib
