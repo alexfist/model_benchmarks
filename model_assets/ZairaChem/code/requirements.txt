@@ -1,22 +1,42 @@
-# ZairaChem Requirements
-# ----------------------
-# ZairaChem manages its own conda environments via install script.
-# This file covers only the additional dependencies needed for the benchmark runner.
+# ZairaChem Requirements (Linux, tested on H100)
+# ------------------------------------------------
+# ZairaChem manages its own conda environment via install script.
+# Use the Docker version — NOT the original zaira-chem repo.
 #
-# Full setup:
-#   git clone https://github.com/ersilia-os/zaira-chem.git
-#   cd zaira-chem
-#   bash install_linux.sh        ← Linux only, creates 'zairachem' conda env
+# Setup:
+#   git clone https://github.com/ersilia-os/zairachem-docker.git
+#   cd zairachem-docker
+#   bash install.sh
 #   conda activate zairachem
-#   pip install -r requirements.txt
 #
-# NOTE: ZairaChem v1 supports classification tasks only.
-# Regression tasks in the ADMET benchmark will be skipped.
+# After install, fix these issues manually:
 #
-# NOTE: Linux only — install script requires bash and is not Mac/Windows compatible.
+# 1 — Install torch (not included in install script):
+#   pip install torch --index-url https://download.pytorch.org/whl/cu126
+#
+# 2 — Install PyTDC:
+#   pip install PyTDC
+#
+# 3 — Fix TrainSetup bug in training.py:
+#   Set self.featurizer_ids = DEFAULT_FEATURIZERS before the model_ids check
+#   File: zairachem-docker/zairachem/setup/prep/training.py
+#
+# 4 — Fix logger.exception bug in utils.py:
+#   Replace logger.exception( with logger.error(
+#   File: zairachem-docker/zairachem/describe/descriptors/utils.py
+#
+# 5 — Install onnx_runner locally:
+#   pip install /path/to/zairachem-docker/src/olinda/onnx_runner
+#
+# 6 — Install olinda locally:
+#   pip install /path/to/zairachem-docker/src/olinda
+#
+# 7 — Fix protobuf version:
+#   pip install "protobuf>=3.19.0,<3.21.0" --force-reinstall
+#
+# NOTE: Classification tasks only — 8 regression tasks are skipped
+# NOTE: Very slow — each task takes 30-60 min, full run takes 24-48 hours
+# NOTE: Use setsid to prevent SIGTSTP from stopping the process
 
 PyTDC
-pandas
-numpy
-scikit-learn
-joblib
+torch
