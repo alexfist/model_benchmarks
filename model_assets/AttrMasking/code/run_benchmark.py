@@ -63,10 +63,8 @@ def run_attrmasking(train, valid, test, task_name, logs_dir):
     higher_is_better = is_clf
 
     param_grid = [
-        {"lr": 1e-3, "epochs": 30},
-        {"lr": 5e-4, "epochs": 30},
-        {"lr": 1e-4, "epochs": 50},
-        {"lr": 1e-3, "epochs": 50},
+    {"lr": 1e-3, "epochs": 20},
+    {"lr": 1e-4, "epochs": 30},
     ]
 
     tuning_logs = []
