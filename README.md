@@ -9,13 +9,13 @@ Internal benchmarking of models from the TDC (Therapeutics Data Commons) leaderb
 This project reproduces and evaluates five models from the TDC leaderboard across 22 ADMET benchmark tasks. For each model, we collect performance metrics, training time, and GPU memory usage, then summarize the results to identify which models perform best on which tasks.
 
 **Models evaluated:**
-- MiniMol
-- DeepMol (AutoML)
-- MapLight + GNN
-- ZairaChem
-- AttrMasking
+- MiniMol ✅
+- DeepMol (AutoML) ✅
+- MapLight + GNN ✅
+- AttrMasking ✅
+- ZairaChem ❌ — could not run due to network restrictions (see results/README.md)
 
-**Benchmark group:**
+**Benchmark groups:**
 - ADMET Benchmark Group (22 tasks)
 
 ---
@@ -26,139 +26,156 @@ This project reproduces and evaluates five models from the TDC leaderboard acros
 model_benchmarks/
 │
 ├── README.md                        # This file
-│
-├── run_all.sh                       # Bash script to run all models AFTER environment intialization
-│
 ├── results/
-│   ├── summary_by_model.csv         # Per-model performance across all tasks
-│   └── top3_by_task.csv             # Top 3 models per task with metrics
+│   ├── README.md                    # Deviations from original pipelines + reproducibility notes
+│   ├── generate_summary.py          # Compiles logs into 3 deliverable CSV tables
+│   ├── summary_by_model.csv         # (generated) per-model scores across all tasks
+│   ├── top3_by_task.csv             # (generated) top 3 models per task
+│   └── hyperparams_summary.csv      # (generated) best hyperparameters per model per task
 │
 └── model_assets/
     ├── MiniMol/
-    │   ├── README.md                # Model-specific documentation
-    │   ├── data/                    # Standardized datasets for each task
-    │   ├── code/                    # Training & inference scripts + requirements.txt
-    │   ├── artifacts/               # Saved model files (model.pkl or model.pt)
-    │   └── logs/                    # Tuning logs & test set evaluation reports
-    │
-    ├── DeepMol/
-    │   └── ...
-    ├── MapLight_GNN/
-    │   └── ...
-    ├── ZairaChem/
-    │   └── ...
-    └── AttrMasking/
-        └── ...
+    │   ├── README.md
+    │   ├── data/
+    │   ├── code/
+    │   │   ├── run_benchmark.py
+    │   │   ├── check_install.py
+    │   │   └── requirements.txt
+    │   ├── artifacts/
+    │   └── logs/
+    ├── DeepMol/         (same structure)
+    ├── MapLight_GNN/    (same structure)
+    ├── AttrMasking/     (same structure)
+    └── ZairaChem/       (same structure — not run due to network restrictions)
 ```
 
 ---
 
-## How to Reproduce Results
+## Environment Setup
 
-### 1. Environment Setup
+Each model requires its own conda environment due to conflicting dependencies. Environments must be set up manually — the `run_all.sh` script is provided as a reference but may not work on all systems due to conda activation differences.
 
-Each model has its own `requirements.txt` inside its `code/` folder. You MUST create a separate conda environment per model to avoid dependency conflicts.
-
-If you are in mainland China or want a faster PyPI mirror, configure pip to use the Tsinghua source first:
+### Create all environments
 
 ```bash
-# Windows
-setup_pip_tsinghua.bat
-
-# Or manually
-pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+conda create -n minimol_env python=3.11 -y
+conda create -n deepmol_env python=3.10 -y
+conda create -n attrmasking_env python=3.8 -y
+conda create -n maplight_env python=3.10 -y
 ```
 
-Then create and activate the environment, and install dependencies:
+### Install dependencies
+
+Follow the `requirements.txt` in each model's `code/` folder — the install order and special flags matter. See each model's README for exact instructions.
+
+**Important:** Do not use `pip install -r requirements.txt` directly for all models — some require conda installs, specific wheel URLs, or `--no-deps` flags that are documented in comments inside each requirements.txt.
+
+---
+
+## How to Run
+
+### Step 1 — Verify installation
+
+Run the check script for each model before running the full benchmark:
 
 ```bash
-conda create -n <model_name>_env python=3.10
-conda activate <model_name>_env
-pip install -r model_assets/<model_name>/code/requirements.txt
+conda activate minimol_env
+python model_assets/MiniMol/code/check_install.py
+
+conda activate deepmol_env
+python model_assets/DeepMol/code/check_install.py
+
+conda activate attrmasking_env
+python model_assets/AttrMasking/code/check_install.py
+
+conda activate maplight_env
+python model_assets/MapLight_GNN/code/check_install.py
 ```
 
-### 2. Running a Model
+### Step 2 — Run benchmarks
 
-If you are using Windows CMD or PowerShell, run the benchmark with the Windows launcher instead of the bash script:
-
-```bat
-run_all.bat
-```
-
-The batch file resolves Conda automatically and uses the same environment names as the bash runner.
-
-
-Each model folder contains a `run_benchmark.py` script that trains and evaluates the model through all 22 ADMET tasks individually. Note: for the ZairaChem model, regression tasks are left out and only classification tasks are included.
-
-For Linux/macOS users, the existing `run_all.sh` workflow is still supported.
+Run each model separately in its own environment. Use `nohup` for long-running models:
 
 ```bash
-cd model_assets/<model_name>/code
-python run_benchmark.py
+# MiniMol (~2-3 hours)
+conda activate minimol_env
+cd model_assets/MiniMol/code
+nohup python run_benchmark.py > ~/model_benchmarks/minimol.log 2>&1 &
+disown
+
+# DeepMol (~3-4 hours)
+conda activate deepmol_env
+cd model_assets/DeepMol/code
+nohup python run_benchmark.py > ~/model_benchmarks/deepmol.log 2>&1 &
+disown
+
+# MapLight+GNN (~2-3 hours)
+conda activate maplight_env
+cd model_assets/MapLight_GNN/code
+nohup python run_benchmark.py > ~/model_benchmarks/maplight.log 2>&1 &
+disown
+
+# AttrMasking (~18-24 hours — run overnight)
+conda activate attrmasking_env
+cd model_assets/AttrMasking/code
+nohup python run_benchmark.py > ~/model_benchmarks/attrmasking.log 2>&1 &
+disown
 ```
 
-Results are saved to `../logs/` and `../artifacts/`. These include some basic toying with the hyperparameters
+To run a single task for testing:
+```bash
+python run_benchmark.py --task hia_hou
+```
 
-### 3. Generating Summary Reports
-
-Once all models have been run, generate the summary tables:
+### Step 3 — Monitor progress
 
 ```bash
+# Check completed tasks per model
+ls model_assets/MiniMol/logs/ | grep -v tuning | grep "\.json" | wc -l
+ls model_assets/DeepMol/logs/ | grep -v tuning | grep "\.json" | wc -l
+ls model_assets/MapLight_GNN/logs/ | grep -v tuning | grep "\.json" | wc -l
+ls model_assets/AttrMasking/logs/ | grep -v tuning | grep "\.json" | wc -l
+
+# Follow live output
+tail -f ~/model_benchmarks/attrmasking.log
+```
+
+### Step 4 — Generate summary reports
+
+Once all models are done:
+
+```bash
+conda activate minimol_env
 python results/generate_summary.py
 ```
 
-This produces:
-- `results/summary_by_model.csv` — each model's scores across all tasks
-- `results/top3_by_task.csv` — top 3 models per task with compute stats
+This produces three CSV tables in `results/`:
+- `summary_by_model.csv` — scores for each model across all 22 tasks
+- `top3_by_task.csv` — top 3 models per task with time and GPU memory
+- `hyperparams_summary.csv` — best hyperparameters and all combos tried per model per task
 
 ---
 
-## Results Summary
-
-### Per-Model Performance
-
-See `results/summary_by_model.csv` for full results.
-
-Example format:
-
-| Task | MiniMol | DeepMol | MapLight+GNN | ZairaChem | AttrMasking |
-|------|---------|---------|--------------|-----------|-------------|
-| HIA_Hou | 0.993 | - | - | - | - |
-| ... | ... | ... | ... | ... | ... |
-
-### Top 3 Models Per Task
-
-See `results/top3_by_task.csv` for full results.
-
-Example format:
-
-| Task | Rank | Model | Metric | Train Time | GPU Memory |
-|------|------|-------|--------|------------|------------|
-| HIA_Hou | 1 | MiniMol | 0.993 | 31 min | 437 MiB |
-| ... | ... | ... | ... | ... | ... |
-
----
-
-## Hardware & Environment
+## Hardware Used
 
 | | Details |
 |---|---|
-| OS | N/A |
-| GPU | N/A |
-| CUDA Version | N/A |
-| Python Version | N/A |
-| Run Date | N/A |
+| OS | Linux (Ubuntu) |
+| GPU | NVIDIA H100 x8 |
+| CUDA Version | 12.8 |
+| CPU | Intel Xeon Platinum 8558P (192 cores) |
+| RAM | 2TB |
 
 ---
 
-## Notes
+## TDC Protocol
 
-- All tasks use TDC's default scaffold split for fair comparison
-- Each task is run 5 times with random seeds 1,2,3,4,5 as outlined in the TDC requirements; mean ± std is reported afterwards
-- Training time and GPU memory are measured per task per model
-- Models with known data leakage issues (e.g. MiniMol) are noted in their individual README
-- If your device has no GPU, then it is recommended to modify the AttrMasking model such that its parameter grid is 2x2 instead of 4x4. All other models should run fine on CPU only.
-- Additionally, if you have a slower computer, it is recommended to run each model benchmark individually instead of running the bash script.
+All tasks follow TDC standard protocol:
+- Scaffold split via `split_type="default"`
+- Seeds [1, 2, 3, 4, 5]
+- `group.evaluate_many()` for official scoring
+- Mean ± std reported across 5 seeds
+
 ---
 
 ## References

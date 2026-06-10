@@ -16,50 +16,37 @@ Unlike standard GNNs which aggregate neighbor information by averaging, GIN uses
 new_representation = MLP((1 + ε) × own_features + sum(neighbor_features))
 ```
 
-This is important because averaging can collapse different graph structures into the same representation. For example, a node with 2 neighbors each of value 1 looks identical to a node with 1 neighbor of value 2 under mean aggregation — but sum aggregation distinguishes them.
-
-For molecules this matters enormously — two molecules can have the same atoms but different connectivity and behave completely differently biologically. GIN is designed to catch these differences.
+Sum aggregation is provably more powerful than mean/max at distinguishing graph structures — it's as powerful as the Weisfeiler-Lehman graph isomorphism test. For molecules this matters enormously since structural isomers can behave completely differently biologically.
 
 ---
 
 ## Pre-training Strategy
 
-The model is pre-trained in two stages before being applied to the ADMET tasks
-
 ### Stage 1 — Node-level (Self-Supervised)
 
-Two complementary strategies teach the model local and neighborhood-level chemistry:
+**Attribute Masking**
+- Randomly masks atom and bond attributes
+- Trains the GNN to predict masked attributes from surrounding neighborhood
+- Teaches local chemical patterns and valence rules
 
-**1. Attribute Masking**
-- Randomly masks atom and bond attributes (e.g. atom type, chirality, bond type)
-- Trains the GNN to predict the masked attributes from the surrounding neighborhood
-- Teaches the model: *"given the chemical context around an atom, what is that atom likely to be?"*
-- Captures local chemical patterns and valence rules
-
-**2. Context Prediction**
-- For each node, defines two subgraphs: an inner neighborhood (K₁ hops) and an outer context graph (K₁ to K₂ hops)
-- Trains the model to predict whether a context graph actually surrounds a given inner neighborhood
-- Teaches the model: *"what does the broader molecular environment around a substructure look like?"*
-- Captures structural relationships between subparts of a molecule
+**Context Prediction**
+- For each node, predicts whether a context graph (K₁ to K₂ hops) surrounds a given inner neighborhood
+- Teaches longer-range structural relationships
 
 ### Stage 2 — Graph-level (Supervised)
-- Pre-trains the full model on labeled data from multiple biological property datasets simultaneously
-- Teaches the model global molecule-level properties before specializing on any single task
-- Acts as a warm-start so fine-tuning on ADMET tasks converges faster and more reliably
+- Pre-trains on labeled data from multiple biological property datasets simultaneously
+- Warm-starts fine-tuning so it converges faster on ADMET tasks
 
 ---
 
 ## Fine-tuning on ADMET Tasks
 
-After pre-training, the model is fine-tuned on each TDC ADMET task individually:
-
 ```
 SMILES string
       ↓
-Convert to molecular graph (atoms = nodes, bonds = edges)
+Molecular graph (atoms = nodes, bonds = edges)
       ↓
-GIN processes graph with sum aggregation
-  (pre-trained weights as starting point)
+GIN with sum aggregation (pre-trained weights as starting point)
       ↓
 Graph-level pooling → fixed-size embedding
       ↓
@@ -70,40 +57,56 @@ Fine-tune all weights end-to-end on task data
 ADMET property prediction
 ```
 
-Unlike MiniMol where the encoder is frozen and only a downstream predictor is trained, AttrMasking **updates the GNN weights themselves** during fine-tuning. This makes it slower but potentially more powerful — the model can adapt its internal representations to the specific chemistry relevant to each task.
+Unlike MiniMol (frozen encoder), AttrMasking **updates all GNN weights** during fine-tuning — slower but more powerful.
 
 ---
 
-## Known Issues
+## Deviations from Original Pipeline
 
-- Requires Python 3.6–3.8 for full DeepPurpose compatibility (older than other models)
-- Requires DGL (Deep Graph Library) and dgllife to be installed separately
-- Pre-trained weights are downloaded automatically on first run (~200MB)
-- Fine-tuning is slower than MiniMol since GNN weights are updated during training
+- Original uses fixed hyperparameters from the paper (lr=0.001, epochs=50)
+- **Our implementation adds a tuning grid** of 2 hyperparameter combos per task:
+  - `lr=1e-3, epochs=20`
+  - `lr=1e-4, epochs=30`
+- Removed `binary=` parameter from `generate_config()` — not available in installed DeepPurpose version
+- Added `CUDA_VISIBLE_DEVICES=0` to prevent multi-GPU NCCL errors on shared server
+- Pre-trained weights downloaded manually to `~/.dgl/` due to intermittent network issues
+- Monkey-patched `dgl.data.utils.download` with `overwrite=False` to prevent re-downloading weights on every run
 
 ---
 
 ## Environment Setup
 
 ```bash
-conda create -n attrmasking_env python=3.8
+conda create -n attrmasking_env python=3.8 -y
 conda activate attrmasking_env
 
 # Install RDKit
-conda install -c conda-forge rdkit
+conda install -c conda-forge rdkit -y
 
-# Install DGL (CPU version for Linux)
-pip install dgl -f https://data.dgl.ai/wheels/torch-2.1/repo.html
+# Install DGL (CPU version for Linux without CUDA)
+pip install dgl -f https://data.dgl.ai/wheels/torch-2.1/cpu/repo.html
+
+# Or with CUDA (for GPU server):
+conda install -c dglteam/label/th24_cu121 dgl -y
 
 # Install dgllife
 pip install dgllife
 
-# Install DeepPurpose dependencies
+# Install DeepPurpose
 pip install git+https://github.com/bp-kelley/descriptastorus
 pip install DeepPurpose
 
 # Install remaining dependencies
 pip install -r code/requirements.txt
+```
+
+### Pre-trained weights
+
+Download manually on first setup:
+
+```bash
+mkdir -p ~/.dgl
+wget https://data.dgl.ai/dgllife/pre_trained/gin_supervised_masking.pth -O ~/.dgl/gin_supervised_masking_pre_trained.pth
 ```
 
 ---
@@ -113,10 +116,10 @@ pip install -r code/requirements.txt
 ```
 AttrMasking/
 ├── README.md               # This file
-├── data/                   # TDC datasets downloaded at runtime (auto-populated)
+├── data/                   # TDC datasets (auto-populated at runtime)
 ├── code/
 │   ├── run_benchmark.py    # Main benchmarking script
-│   ├── check_install.py    # Installation verification script
+│   ├── check_install.py    # Installation verification
 │   └── requirements.txt    # Dependencies
 ├── artifacts/              # Saved fine-tuned model per task (auto-populated)
 └── logs/                   # Per-task JSON result logs and tuning logs (auto-populated)
@@ -127,44 +130,42 @@ AttrMasking/
 ## How to Run
 
 ```bash
-cd model_benchmarks/AttrMasking/code
+conda activate attrmasking_env
+cd model_assets/AttrMasking/code
 
-# Verify installation first
+# Verify installation
 python check_install.py
 
-# Run full benchmark across all 22 tasks
-python run_benchmark.py
+# Run full benchmark (run overnight — ~18-24 hours)
+nohup python run_benchmark.py > ~/model_benchmarks/attrmasking.log 2>&1 &
+disown
 
-# Run a single task
+# Run a single task for testing
 python run_benchmark.py --task hia_hou
 ```
 
 ---
 
-## Data
-
-All datasets from TDC ADMET Benchmark Group, downloaded automatically via `PyTDC`. All tasks use TDC's default **scaffold split**.
-
----
-
 ## Tuning
 
-AttrMasking tunes the GNN fine-tuning process across 4 combinations:
+2 hyperparameter combinations tried per task per seed:
 
 | Learning Rate | Epochs |
 |---|---|
-| 1e-3 | 30 |
-| 5e-4 | 30 |
-| 1e-4 | 50 |
-| 1e-3 | 50 |
+| 1e-3 | 20 |
+| 1e-4 | 30 |
 
-The best combination on the validation set is used for final test evaluation. All tuning results are logged to `logs/<task_name>_tuning.json`.
+Best combination on validation set used for final test evaluation. All tuning results logged to `logs/<task_name>_tuning.json`.
 
 ---
 
-## Results
+## Known Issues
 
-See `logs/_all_results.json` for full results after running.
+- Requires Python 3.8 — older than other models due to DeepPurpose compatibility
+- Very slow — 2 combos × 5 seeds = 10 fine-tuning runs per task, each training a full GNN
+- GPU memory shows 0.0 MiB in logs — this is a tracking limitation, GPU is actually being used
+- Pre-trained weights must be downloaded manually on first run
+- Use `CUDA_VISIBLE_DEVICES=0` to avoid NCCL multi-GPU errors on shared servers
 
 ---
 
@@ -173,4 +174,3 @@ See `logs/_all_results.json` for full results after running.
 - [Strategies for Pre-training Graph Neural Networks (Hu et al., 2020)](https://arxiv.org/abs/1905.12265)
 - [DeepPurpose GitHub](https://github.com/kexinhuang12345/DeepPurpose)
 - [DGL-LifeSci](https://github.com/awslabs/dgl-lifesci)
-- [TDC AttrMasking Tutorial](https://github.com/mims-harvard/TDC/blob/main/tutorials/DGL_User_Group_Demo.ipynb)
