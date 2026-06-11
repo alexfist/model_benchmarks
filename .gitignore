@@ -12,7 +12,7 @@ model_assets/*/logs/*
 model_assets/*/artifacts/*
 !model_assets/*/artifacts/.gitkeep
 
-results/*.csv
+# results/*.csv
 __pycache__/
 *.pyc
 *.pyo

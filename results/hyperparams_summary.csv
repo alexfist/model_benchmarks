@@ -1,0 +1,85 @@
+task,model,best_params,best_val_score,num_combos_tried,all_combos
+caco2_wang,MiniMol,"n_estimators=50, max_depth=None",0.4056,4,+: 0.4056 | +: 0.4188 | +: 0.4278 | +: 0.4277
+caco2_wang,DeepMol,morgan_1024+xgb,0.4529,6,morgan_2048+rf_100: 0.4588 | morgan_2048+rf_200: 0.4605 | morgan_2048+xgb: 0.4736 | morgan_1024+rf_100: 0.4809 | morgan_1024+rf_200: 0.4781 | morgan_1024+xgb: 0.4529
+caco2_wang,MapLight_GNN,"iterations=500, learning_rate=0.1",0.3373,4,"iter=500, lr=0.1: 0.3373 | iter=1000, lr=0.1: 0.3381 | iter=1000, lr=0.03: 0.34 | iter=2000, lr=0.03: 0.3417"
+caco2_wang,AttrMasking,"lr=0.001, epochs=20",0.4585,2,"lr=0.001, epochs=20: 0.4585 | lr=0.0001, epochs=30: 0.5096"
+hia_hou,MiniMol,"n_estimators=200, max_depth=None",0.9073,4,+: 0.8997 | +: 0.8835 | +: 0.9073 | +: 0.9048
+hia_hou,DeepMol,morgan_2048+rf_100,0.9273,6,morgan_2048+rf_100: 0.9273 | morgan_2048+rf_200: 0.9135 | morgan_2048+xgb: 0.6992 | morgan_1024+rf_100: 0.8346 | morgan_1024+rf_200: 0.817 | morgan_1024+xgb: 0.5789
+hia_hou,MapLight_GNN,"iterations=1000, learning_rate=0.03",0.9799,4,"iter=500, lr=0.1: 0.9749 | iter=1000, lr=0.1: 0.9749 | iter=1000, lr=0.03: 0.9799 | iter=2000, lr=0.03: 0.9799"
+hia_hou,AttrMasking,"lr=0.001, epochs=20",0.9975,2,"lr=0.001, epochs=20: 0.9975 | lr=0.0001, epochs=30: 0.995"
+pgp_broccatelli,MiniMol,"n_estimators=200, max_depth=10",0.9720,4,+: 0.9675 | +: 0.9666 | +: 0.9689 | +: 0.972
+pgp_broccatelli,DeepMol,morgan_2048+rf_200,0.9764,6,morgan_2048+rf_100: 0.9748 | morgan_2048+rf_200: 0.9764 | morgan_2048+xgb: 0.9541 | morgan_1024+rf_100: 0.9678 | morgan_1024+rf_200: 0.9725 | morgan_1024+xgb: 0.9358
+pgp_broccatelli,MapLight_GNN,"iterations=1000, learning_rate=0.03",0.9762,4,"iter=500, lr=0.1: 0.9732 | iter=1000, lr=0.1: 0.9747 | iter=1000, lr=0.03: 0.9762 | iter=2000, lr=0.03: 0.9747"
+pgp_broccatelli,AttrMasking,"lr=0.001, epochs=20",0.9762,2,"lr=0.001, epochs=20: 0.9762 | lr=0.0001, epochs=30: 0.9712"
+bioavailability_ma,MiniMol,"n_estimators=200, max_depth=10",0.7035,4,+: 0.645 | +: 0.6322 | +: 0.6851 | +: 0.7035
+bioavailability_ma,DeepMol,morgan_2048+rf_100,0.6859,6,morgan_2048+rf_100: 0.6859 | morgan_2048+rf_200: 0.6675 | morgan_2048+xgb: 0.6506 | morgan_1024+rf_100: 0.5553 | morgan_1024+rf_200: 0.5769 | morgan_1024+xgb: 0.6795
+bioavailability_ma,MapLight_GNN,"iterations=1000, learning_rate=0.03",0.7740,4,"iter=500, lr=0.1: 0.742 | iter=1000, lr=0.1: 0.7564 | iter=1000, lr=0.03: 0.774 | iter=2000, lr=0.03: 0.758"
+bioavailability_ma,AttrMasking,"lr=0.001, epochs=20",0.8029,2,"lr=0.001, epochs=20: 0.8029 | lr=0.0001, epochs=30: 0.7933"
+lipophilicity_astrazeneca,MiniMol,"n_estimators=200, max_depth=None",0.6454,4,+: 0.6619 | +: 0.6553 | +: 0.6454 | +: 0.6592
+lipophilicity_astrazeneca,DeepMol,morgan_2048+xgb,0.7755,6,morgan_2048+rf_100: 0.7951 | morgan_2048+rf_200: 0.7963 | morgan_2048+xgb: 0.7755 | morgan_1024+rf_100: 0.8246 | morgan_1024+rf_200: 0.8302 | morgan_1024+xgb: 0.7994
+lipophilicity_astrazeneca,MapLight_GNN,"iterations=2000, learning_rate=0.03",0.5072,4,"iter=500, lr=0.1: 0.5318 | iter=1000, lr=0.1: 0.5283 | iter=1000, lr=0.03: 0.5183 | iter=2000, lr=0.03: 0.5072"
+lipophilicity_astrazeneca,AttrMasking,"lr=0.001, epochs=20",0.5420,2,"lr=0.001, epochs=20: 0.542 | lr=0.0001, epochs=30: 0.5781"
+solubility_aqsoldb,MiniMol,"n_estimators=200, max_depth=None",1.2406,4,+: 1.2422 | +: 1.243 | +: 1.2406 | +: 1.2556
+solubility_aqsoldb,DeepMol,morgan_2048+xgb,1.5675,6,morgan_2048+rf_100: 1.7196 | morgan_2048+rf_200: 1.6878 | morgan_2048+xgb: 1.5675 | morgan_1024+rf_100: 1.7995 | morgan_1024+rf_200: 1.772 | morgan_1024+xgb: 1.5718
+solubility_aqsoldb,MapLight_GNN,"iterations=1000, learning_rate=0.1",1.5488,4,"iter=500, lr=0.1: 1.568 | iter=1000, lr=0.1: 1.5488 | iter=1000, lr=0.03: 1.5811 | iter=2000, lr=0.03: 1.569"
+solubility_aqsoldb,AttrMasking,"lr=0.0001, epochs=30",1.2557,2,"lr=0.001, epochs=20: 1.3989 | lr=0.0001, epochs=30: 1.2557"
+bbb_martins,MiniMol,"n_estimators=50, max_depth=None",0.9369,4,+: 0.9369 | +: 0.9355 | +: 0.9361 | +: 0.931
+bbb_martins,DeepMol,morgan_1024+rf_100,0.9693,6,morgan_2048+rf_100: 0.9684 | morgan_2048+rf_200: 0.9668 | morgan_2048+xgb: 0.9554 | morgan_1024+rf_100: 0.9693 | morgan_1024+rf_200: 0.9659 | morgan_1024+xgb: 0.9478
+bbb_martins,MapLight_GNN,"iterations=1000, learning_rate=0.1",0.9782,4,"iter=500, lr=0.1: 0.9767 | iter=1000, lr=0.1: 0.9782 | iter=1000, lr=0.03: 0.9741 | iter=2000, lr=0.03: 0.9747"
+bbb_martins,AttrMasking,"lr=0.001, epochs=20",0.9503,2,"lr=0.001, epochs=20: 0.9503 | lr=0.0001, epochs=30: 0.9302"
+ppbr_az,MiniMol,"n_estimators=100, max_depth=None",10.0021,4,+: 10.1392 | +: 10.0021 | +: 10.2114 | +: 10.3461
+ppbr_az,DeepMol,morgan_1024+xgb,12.7479,6,morgan_2048+rf_100: 13.4524 | morgan_2048+rf_200: 13.3855 | morgan_2048+xgb: 13.3202 | morgan_1024+rf_100: 13.6733 | morgan_1024+rf_200: 13.6991 | morgan_1024+xgb: 12.7479
+ppbr_az,MapLight_GNN,"iterations=1000, learning_rate=0.03",9.1836,4,"iter=500, lr=0.1: 9.6189 | iter=1000, lr=0.1: 9.5972 | iter=1000, lr=0.03: 9.1836 | iter=2000, lr=0.03: 9.1997"
+ppbr_az,AttrMasking,"lr=0.001, epochs=20",11.3286,2,"lr=0.001, epochs=20: 11.3286 | lr=0.0001, epochs=30: 11.5098"
+vdss_lombardo,MiniMol,"n_estimators=200, max_depth=10",4.0581,4,+: 4.4156 | +: 4.4303 | +: 4.1219 | +: 4.0581
+vdss_lombardo,DeepMol,morgan_2048+xgb,3.6108,6,morgan_2048+rf_100: 3.8547 | morgan_2048+rf_200: 3.7746 | morgan_2048+xgb: 3.6108 | morgan_1024+rf_100: 3.8512 | morgan_1024+rf_200: 3.7219 | morgan_1024+xgb: 4.0979
+vdss_lombardo,MapLight_GNN,"iterations=1000, learning_rate=0.03",3.2148,4,"iter=500, lr=0.1: 3.2254 | iter=1000, lr=0.1: 3.2262 | iter=1000, lr=0.03: 3.2148 | iter=2000, lr=0.03: 3.2299"
+vdss_lombardo,AttrMasking,"lr=0.001, epochs=20",3.0739,2,"lr=0.001, epochs=20: 3.0739 | lr=0.0001, epochs=30: 4.5527"
+cyp2d6_veith,MiniMol,"n_estimators=200, max_depth=10",0.8515,4,+: 0.8475 | +: 0.8515 | +: 0.8498 | +: 0.8515
+cyp2d6_veith,DeepMol,morgan_2048+xgb,0.8366,6,morgan_2048+rf_100: 0.8234 | morgan_2048+rf_200: 0.8259 | morgan_2048+xgb: 0.8366 | morgan_1024+rf_100: 0.835 | morgan_1024+rf_200: 0.8358 | morgan_1024+xgb: 0.8276
+cyp2d6_veith,MapLight_GNN,"iterations=1000, learning_rate=0.03",0.9216,4,"iter=500, lr=0.1: 0.915 | iter=1000, lr=0.1: 0.9173 | iter=1000, lr=0.03: 0.9216 | iter=2000, lr=0.03: 0.9209"
+cyp2d6_veith,AttrMasking,"lr=0.0001, epochs=30",0.9149,2,"lr=0.001, epochs=20: 0.9085 | lr=0.0001, epochs=30: 0.9149"
+cyp3a4_veith,MiniMol,"n_estimators=200, max_depth=None",0.9094,4,+: 0.8979 | +: 0.9046 | +: 0.9094 | +: 0.9083
+cyp3a4_veith,DeepMol,morgan_2048+rf_200,0.9059,6,morgan_2048+rf_100: 0.9037 | morgan_2048+rf_200: 0.9059 | morgan_2048+xgb: 0.9047 | morgan_1024+rf_100: 0.8985 | morgan_1024+rf_200: 0.9017 | morgan_1024+xgb: 0.8987
+cyp3a4_veith,MapLight_GNN,"iterations=2000, learning_rate=0.03",0.9489,4,"iter=500, lr=0.1: 0.947 | iter=1000, lr=0.1: 0.9462 | iter=1000, lr=0.03: 0.9476 | iter=2000, lr=0.03: 0.9489"
+cyp3a4_veith,AttrMasking,"lr=0.0001, epochs=30",0.9387,2,"lr=0.001, epochs=20: 0.9313 | lr=0.0001, epochs=30: 0.9387"
+cyp2c9_veith,MiniMol,"n_estimators=200, max_depth=None",0.8927,4,+: 0.8841 | +: 0.8903 | +: 0.8927 | +: 0.8866
+cyp2c9_veith,DeepMol,morgan_2048+rf_200,0.8533,6,morgan_2048+rf_100: 0.852 | morgan_2048+rf_200: 0.8533 | morgan_2048+xgb: 0.8497 | morgan_1024+rf_100: 0.8426 | morgan_1024+rf_200: 0.851 | morgan_1024+xgb: 0.8454
+cyp2c9_veith,MapLight_GNN,"iterations=2000, learning_rate=0.03",0.9311,4,"iter=500, lr=0.1: 0.9285 | iter=1000, lr=0.1: 0.9293 | iter=1000, lr=0.03: 0.9307 | iter=2000, lr=0.03: 0.9311"
+cyp2c9_veith,AttrMasking,"lr=0.0001, epochs=30",0.9269,2,"lr=0.001, epochs=20: 0.9183 | lr=0.0001, epochs=30: 0.9269"
+cyp2c9_substrate_carbonmangels,MiniMol,"n_estimators=200, max_depth=None",0.7606,4,+: 0.6875 | +: 0.7597 | +: 0.7606 | +: 0.7565
+cyp2c9_substrate_carbonmangels,DeepMol,morgan_1024+xgb,0.7776,6,morgan_2048+rf_100: 0.5844 | morgan_2048+rf_200: 0.5795 | morgan_2048+xgb: 0.7532 | morgan_1024+rf_100: 0.6136 | morgan_1024+rf_200: 0.595 | morgan_1024+xgb: 0.7776
+cyp2c9_substrate_carbonmangels,MapLight_GNN,"iterations=500, learning_rate=0.1",0.8117,4,"iter=500, lr=0.1: 0.8117 | iter=1000, lr=0.1: 0.8084 | iter=1000, lr=0.03: 0.7792 | iter=2000, lr=0.03: 0.7873"
+cyp2c9_substrate_carbonmangels,AttrMasking,"lr=0.0001, epochs=30",0.8084,2,"lr=0.001, epochs=20: 0.8003 | lr=0.0001, epochs=30: 0.8084"
+cyp2d6_substrate_carbonmangels,MiniMol,"n_estimators=200, max_depth=10",0.8352,4,+: 0.777 | +: 0.815 | +: 0.8342 | +: 0.8352
+cyp2d6_substrate_carbonmangels,DeepMol,morgan_2048+xgb,0.6529,6,morgan_2048+rf_100: 0.6181 | morgan_2048+rf_200: 0.5989 | morgan_2048+xgb: 0.6529 | morgan_1024+rf_100: 0.641 | morgan_1024+rf_200: 0.6433 | morgan_1024+xgb: 0.6484
+cyp2d6_substrate_carbonmangels,MapLight_GNN,"iterations=1000, learning_rate=0.1",0.8498,4,"iter=500, lr=0.1: 0.848 | iter=1000, lr=0.1: 0.8498 | iter=1000, lr=0.03: 0.8416 | iter=2000, lr=0.03: 0.837"
+cyp2d6_substrate_carbonmangels,AttrMasking,"lr=0.001, epochs=20",0.8123,2,"lr=0.001, epochs=20: 0.8123 | lr=0.0001, epochs=30: 0.8031"
+cyp3a4_substrate_carbonmangels,MiniMol,"n_estimators=100, max_depth=None",0.6292,4,+: 0.612 | +: 0.6292 | +: 0.6218 | +: 0.6139
+cyp3a4_substrate_carbonmangels,DeepMol,morgan_1024+rf_100,0.6852,6,morgan_2048+rf_100: 0.6815 | morgan_2048+rf_200: 0.6824 | morgan_2048+xgb: 0.587 | morgan_1024+rf_100: 0.6852 | morgan_1024+rf_200: 0.6843 | morgan_1024+xgb: 0.6343
+cyp3a4_substrate_carbonmangels,MapLight_GNN,"iterations=2000, learning_rate=0.03",0.7148,4,"iter=500, lr=0.1: 0.6935 | iter=1000, lr=0.1: 0.688 | iter=1000, lr=0.03: 0.7139 | iter=2000, lr=0.03: 0.7148"
+cyp3a4_substrate_carbonmangels,AttrMasking,"lr=0.001, epochs=20",0.7741,2,"lr=0.001, epochs=20: 0.7741 | lr=0.0001, epochs=30: 0.7417"
+half_life_obach,MiniMol,"n_estimators=50, max_depth=None",26.3751,4,+: 26.3751 | +: 28.6658 | +: 28.2506 | +: 27.3926
+half_life_obach,DeepMol,morgan_1024+rf_200,40.8905,6,morgan_2048+rf_100: 58.8231 | morgan_2048+rf_200: 61.5756 | morgan_2048+xgb: 89.1237 | morgan_1024+rf_100: 44.8421 | morgan_1024+rf_200: 40.8905 | morgan_1024+xgb: 76.1425
+half_life_obach,MapLight_GNN,"iterations=1000, learning_rate=0.03",38.2601,4,"iter=500, lr=0.1: 41.3905 | iter=1000, lr=0.1: 41.4032 | iter=1000, lr=0.03: 38.2601 | iter=2000, lr=0.03: 38.3162"
+half_life_obach,AttrMasking,"lr=0.0001, epochs=30",24.1867,2,"lr=0.001, epochs=20: 27.4813 | lr=0.0001, epochs=30: 24.1867"
+clearance_hepatocyte_az,MiniMol,"n_estimators=100, max_depth=None",36.5998,4,+: 36.6327 | +: 36.5998 | +: 36.8603 | +: 37.1345
+clearance_hepatocyte_az,DeepMol,morgan_2048+rf_100,32.4609,6,morgan_2048+rf_100: 32.4609 | morgan_2048+rf_200: 32.5664 | morgan_2048+xgb: 32.8464 | morgan_1024+rf_100: 34.8386 | morgan_1024+rf_200: 34.5283 | morgan_1024+xgb: 35.3026
+clearance_hepatocyte_az,MapLight_GNN,"iterations=1000, learning_rate=0.1",34.3098,4,"iter=500, lr=0.1: 34.333 | iter=1000, lr=0.1: 34.3098 | iter=1000, lr=0.03: 34.6221 | iter=2000, lr=0.03: 34.3723"
+clearance_hepatocyte_az,AttrMasking,"lr=0.001, epochs=20",35.2998,2,"lr=0.001, epochs=20: 35.2998 | lr=0.0001, epochs=30: 36.4391"
+clearance_microsome_az,MiniMol,"n_estimators=200, max_depth=None",29.0035,4,+: 30.1074 | +: 30.0343 | +: 29.0035 | +: 29.0945
+clearance_microsome_az,DeepMol,morgan_2048+rf_200,30.7973,6,morgan_2048+rf_100: 31.379 | morgan_2048+rf_200: 30.7973 | morgan_2048+xgb: 32.762 | morgan_1024+rf_100: 31.7439 | morgan_1024+rf_200: 31.4439 | morgan_1024+xgb: 34.9898
+clearance_microsome_az,MapLight_GNN,"iterations=1000, learning_rate=0.1",27.6593,4,"iter=500, lr=0.1: 27.6728 | iter=1000, lr=0.1: 27.6593 | iter=1000, lr=0.03: 28.5258 | iter=2000, lr=0.03: 28.5193"
+clearance_microsome_az,AttrMasking,"lr=0.001, epochs=20",26.2183,2,"lr=0.001, epochs=20: 26.2183 | lr=0.0001, epochs=30: 28.9937"
+herg,MiniMol,"n_estimators=200, max_depth=None",0.9183,4,+: 0.9003 | +: 0.9141 | +: 0.9183 | +: 0.9126
+herg,DeepMol,morgan_2048+xgb,0.8946,6,morgan_2048+rf_100: 0.821 | morgan_2048+rf_200: 0.8324 | morgan_2048+xgb: 0.8946 | morgan_1024+rf_100: 0.8276 | morgan_1024+rf_200: 0.8566 | morgan_1024+xgb: 0.868
+herg,MapLight_GNN,"iterations=1000, learning_rate=0.03",0.8699,4,"iter=500, lr=0.1: 0.85 | iter=1000, lr=0.1: 0.8462 | iter=1000, lr=0.03: 0.8699 | iter=2000, lr=0.03: 0.868"
+herg,AttrMasking,"lr=0.001, epochs=20",0.8519,2,"lr=0.001, epochs=20: 0.8519 | lr=0.0001, epochs=30: 0.8367"
+ames,MiniMol,"n_estimators=200, max_depth=None",0.8340,4,+: 0.8224 | +: 0.832 | +: 0.834 | +: 0.8219
+ames,DeepMol,morgan_2048+xgb,0.8661,6,morgan_2048+rf_100: 0.8522 | morgan_2048+rf_200: 0.8594 | morgan_2048+xgb: 0.8661 | morgan_1024+rf_100: 0.8458 | morgan_1024+rf_200: 0.8494 | morgan_1024+xgb: 0.8315
+ames,MapLight_GNN,"iterations=2000, learning_rate=0.03",0.8648,4,"iter=500, lr=0.1: 0.8544 | iter=1000, lr=0.1: 0.8572 | iter=1000, lr=0.03: 0.8591 | iter=2000, lr=0.03: 0.8648"
+ames,AttrMasking,"lr=0.001, epochs=20",0.8376,2,"lr=0.001, epochs=20: 0.8376 | lr=0.0001, epochs=30: 0.8292"
+dili,MiniMol,"n_estimators=200, max_depth=10",0.8444,4,+: 0.8077 | +: 0.8339 | +: 0.833 | +: 0.8444
+dili,DeepMol,morgan_2048+rf_200,0.8156,6,morgan_2048+rf_100: 0.8138 | morgan_2048+rf_200: 0.8156 | morgan_2048+xgb: 0.8147 | morgan_1024+rf_100: 0.8086 | morgan_1024+rf_200: 0.8051 | morgan_1024+xgb: 0.7937
+dili,MapLight_GNN,"iterations=1000, learning_rate=0.03",0.8741,4,"iter=500, lr=0.1: 0.8706 | iter=1000, lr=0.1: 0.8671 | iter=1000, lr=0.03: 0.8741 | iter=2000, lr=0.03: 0.8671"
+dili,AttrMasking,"lr=0.001, epochs=20",0.8566,2,"lr=0.001, epochs=20: 0.8566 | lr=0.0001, epochs=30: 0.8549"
