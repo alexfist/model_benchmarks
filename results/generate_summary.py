@@ -19,6 +19,14 @@ from glob import glob
 
 MODELS = ["MiniMol", "DeepMol", "MapLight_GNN", "AttrMasking", "ZairaChem"]
 
+MODEL_ALGORITHM = {
+    "MiniMol":     "GNN + RF",
+    "DeepMol":     "XGBoost/RF",
+    "MapLight_GNN":"CatBoost",
+    "AttrMasking": "Fine-tuned GNN",
+    "ZairaChem":   "Ensemble",
+}
+
 TASKS = [
     "caco2_wang",
     "hia_hou",
@@ -154,6 +162,7 @@ def generate_comparison_table(records, output_dir):
         rows.append({
             "benchmark":          task,
             "model":              best_model if best_model else "-",
+            "algorithm":          MODEL_ALGORITHM.get(best_model, "-") if best_model else "-",
             "task_type":          task_type,
             "leaderboard_metric": metric,
             "score":              round(best_score, 3) if best_score is not None else "-",
