@@ -1,15 +1,14 @@
 """
 generate_summary.py
 -------------------
-Reads all model logs and produces three deliverable CSV reports:
+Produces a benchmark results table matching the ZairaChem paper format.
+One row per task, showing the best model and its score.
 
-1. results/summary_by_model.csv     — per-model scores across all 22 tasks
-2. results/top3_by_task.csv         — top 3 models per task with compute stats
-3. results/hyperparams_summary.csv  — best hyperparameters + all combos tried per model per task
+Output: results/benchmark_comparison.csv
 
 Usage:
     python generate_summary.py
-    python generate_summary.py --logs ./logs --output ./results
+    python generate_summary.py --logs ./model_assets --output ./results
 """
 
 import os
@@ -18,26 +17,75 @@ import argparse
 import pandas as pd
 from glob import glob
 
-MODELS = ["MiniMol", "DeepMol", "MapLight_GNN", "ZairaChem", "AttrMasking"]
+MODELS = ["MiniMol", "DeepMol", "MapLight_GNN", "AttrMasking", "ZairaChem"]
 
 TASKS = [
-    "caco2_wang", "hia_hou", "pgp_broccatelli", "bioavailability_ma",
-    "lipophilicity_astrazeneca", "solubility_aqsoldb", "bbb_martins",
-    "ppbr_az", "vdss_lombardo", "cyp2c19_veith", "cyp2d6_veith",
-    "cyp3a4_veith", "cyp1a2_veith", "cyp2c9_veith",
-    "cyp2c9_substrate_carbonmangels", "cyp2d6_substrate_carbonmangels",
-    "cyp3a4_substrate_carbonmangels", "half_life_obach",
-    "clearance_hepatocyte_az", "clearance_microsome_az",
-    "herg", "ames", "dili",
+    "caco2_wang",
+    "hia_hou",
+    "pgp_broccatelli",
+    "bioavailability_ma",
+    "lipophilicity_astrazeneca",
+    "solubility_aqsoldb",
+    "bbb_martins",
+    "ppbr_az",
+    "vdss_lombardo",
+    "cyp2d6_veith",
+    "cyp3a4_veith",
+    "cyp2c9_veith",
+    "cyp2c9_substrate_carbonmangels",
+    "cyp2d6_substrate_carbonmangels",
+    "cyp3a4_substrate_carbonmangels",
+    "half_life_obach",
+    "clearance_hepatocyte_az",
+    "clearance_microsome_az",
+    "ld50_zhu",
+    "herg",
+    "ames",
+    "dili",
 ]
+
+LOWER_IS_BETTER = {
+    "caco2_wang",
+    "lipophilicity_astrazeneca",
+    "solubility_aqsoldb",
+    "ppbr_az",
+    "half_life_obach",
+    "clearance_hepatocyte_az",
+    "clearance_microsome_az",
+    "ld50_zhu",
+}
+
+TASK_TYPE = {
+    "caco2_wang":                    "regression",
+    "hia_hou":                       "binary",
+    "pgp_broccatelli":               "binary",
+    "bioavailability_ma":            "binary",
+    "lipophilicity_astrazeneca":     "regression",
+    "solubility_aqsoldb":            "regression",
+    "bbb_martins":                   "binary",
+    "ppbr_az":                       "regression",
+    "vdss_lombardo":                 "regression",
+    "cyp2d6_veith":                  "binary",
+    "cyp3a4_veith":                  "binary",
+    "cyp2c9_veith":                  "binary",
+    "cyp2c9_substrate_carbonmangels":"binary",
+    "cyp2d6_substrate_carbonmangels":"binary",
+    "cyp3a4_substrate_carbonmangels":"binary",
+    "half_life_obach":               "regression",
+    "clearance_hepatocyte_az":       "regression",
+    "clearance_microsome_az":        "regression",
+    "ld50_zhu":                      "regression",
+    "herg":                          "binary",
+    "ames":                          "binary",
+    "dili":                          "binary",
+}
 
 
 def load_all_results(logs_dir):
-    records = []
+    records = {}
     for model_name in MODELS:
         model_log_dir = os.path.join(logs_dir, model_name, "logs")
         if not os.path.exists(model_log_dir):
-            print(f"  ⚠ No logs found for {model_name} — skipping")
             continue
 
         log_files = glob(os.path.join(model_log_dir, "*.json"))
@@ -49,190 +97,98 @@ def load_all_results(logs_dir):
             with open(log_file) as f:
                 result = json.load(f)
 
-            if "error" in result:
-                print(f"  ✗ {model_name} / {result.get('task', '?')} failed: {result['error']}")
-                continue
-            if result.get("status") == "skipped":
+            if "error" in result or result.get("status") == "skipped":
                 continue
 
-            records.append({
-                "model":          model_name,
-                "task":           result["task"],
-                "metric":         result.get("metric", ""),
-                "score_mean":     result.get("score_mean"),
-                "score_std":      result.get("score_std"),
-                "train_time_sec": result.get("train_time_sec_mean"),
-                "gpu_memory_mib": result.get("gpu_memory_mib_mean"),
-            })
+            task = result.get("task")
+            if task not in records:
+                records[task] = {}
 
-    return pd.DataFrame(records)
+            records[task][model_name] = {
+                "score_mean": result.get("score_mean"),
+                "score_std":  result.get("score_std"),
+                "metric":     result.get("metric", ""),
+            }
 
-
-def load_all_tuning(logs_dir):
-    records = []
-    for model_name in MODELS:
-        model_log_dir = os.path.join(logs_dir, model_name, "logs")
-        if not os.path.exists(model_log_dir):
-            continue
-
-        tuning_files = glob(os.path.join(model_log_dir, "*_tuning.json"))
-
-        for tuning_file in tuning_files:
-            with open(tuning_file) as f:
-                result = json.load(f)
-
-            task_name      = result.get("task", "")
-            best_params    = result.get("best_params", {})
-            best_val_score = result.get("best_val_score")
-            tuning_runs    = result.get("tuning_runs", [])
-            best_combo     = result.get("best_combo", "")
-
-            if isinstance(best_params, dict):
-                best_params_str = ", ".join(f"{k}={v}" for k, v in best_params.items())
-            else:
-                best_params_str = str(best_params)
-
-            # Format all tried combos as a readable string
-            all_combos_parts = []
-            for r in tuning_runs:
-                if "error" in r:
-                    continue
-                combo = r.get("combo") or r.get("featurizer", "") + "+" + r.get("model", "")
-                score = r.get("val_score", "-")
-                all_combos_parts.append(f"{combo}: {score}")
-            all_combos_str = " | ".join(all_combos_parts)
-
-            records.append({
-                "model":            model_name,
-                "task":             task_name,
-                "best_params":      best_params_str if best_params_str else best_combo,
-                "best_val_score":   best_val_score,
-                "num_combos_tried": len(tuning_runs),
-                "all_combos":       all_combos_str,
-            })
-
-    return pd.DataFrame(records)
+    return records
 
 
-def generate_summary_by_model(df, output_dir):
+def generate_comparison_table(records, output_dir):
     rows = []
+
     for task in TASKS:
-        task_df = df[df["task"] == task]
-        row = {"task": task}
+        task_records = records.get(task, {})
+        task_type = TASK_TYPE.get(task, "unknown")
+        lower_is_better = task in LOWER_IS_BETTER
+
+        # Get metric name from any available model
+        metric = "-"
         for model in MODELS:
-            model_row = task_df[task_df["model"] == model]
-            if model_row.empty:
-                row[f"{model}"] = "-"
-            else:
-                mean   = model_row.iloc[0]["score_mean"]
-                std    = model_row.iloc[0]["score_std"]
-                metric = model_row.iloc[0]["metric"]
-                row[f"{model} ({metric})"] = f"{mean:.4f} ± {std:.4f}"
-        rows.append(row)
+            if model in task_records and task_records[model]["metric"]:
+                metric = task_records[model]["metric"]
+                break
 
-    summary_df = pd.DataFrame(rows)
-    out_path = os.path.join(output_dir, "summary_by_model.csv")
-    summary_df.to_csv(out_path, index=False)
-    print(f"  ✓ Saved: {out_path}")
-    return summary_df
+        # Find best model
+        best_score = None
+        best_model = None
+        best_std   = None
 
-
-def generate_top3_by_task(df, output_dir):
-    regression_metrics = {"mae", "rmse", "mse", "spearman"}
-    rows = []
-    for task in TASKS:
-        task_df = df[df["task"] == task].copy()
-        if task_df.empty:
-            continue
-
-        metric    = task_df.iloc[0]["metric"].lower() if not task_df.empty else ""
-        ascending = any(m in metric for m in regression_metrics)
-        task_df   = task_df.sort_values("score_mean", ascending=ascending).reset_index(drop=True)
-
-        for rank, (_, row) in enumerate(task_df.head(3).iterrows(), start=1):
-            rows.append({
-                "task":           row["task"],
-                "rank":           rank,
-                "model":          row["model"],
-                "metric":         row["metric"],
-                "score":          f"{row['score_mean']:.4f} ± {row['score_std']:.4f}",
-                "train_time_min": f"{row['train_time_sec'] / 60:.1f}" if row["train_time_sec"] else "-",
-                "gpu_memory_mib": f"{row['gpu_memory_mib']:.0f}" if row["gpu_memory_mib"] else "-",
-            })
-
-    top3_df = pd.DataFrame(rows)
-    out_path = os.path.join(output_dir, "top3_by_task.csv")
-    top3_df.to_csv(out_path, index=False)
-    print(f"  ✓ Saved: {out_path}")
-    return top3_df
-
-
-def generate_hyperparams_summary(tuning_df, output_dir):
-    rows = []
-    for task in TASKS:
         for model in MODELS:
-            row_df = tuning_df[
-                (tuning_df["task"] == task) &
-                (tuning_df["model"] == model)
-            ]
-            if row_df.empty:
+            if model not in task_records:
+                continue
+            mean = task_records[model]["score_mean"]
+            std  = task_records[model]["score_std"]
+            if mean is None:
                 continue
 
-            row = row_df.iloc[0]
-            rows.append({
-                "task":             task,
-                "model":            model,
-                "best_params":      row["best_params"],
-                "best_val_score":   f"{row['best_val_score']:.4f}" if row["best_val_score"] else "-",
-                "num_combos_tried": row["num_combos_tried"],
-                "all_combos":       row["all_combos"],
-            })
+            is_better = (
+                best_score is None or
+                (lower_is_better and mean < best_score) or
+                (not lower_is_better and mean > best_score)
+            )
+            if is_better:
+                best_score = mean
+                best_model = model
+                best_std   = std
 
-    hyperparams_df = pd.DataFrame(rows)
-    out_path = os.path.join(output_dir, "hyperparams_summary.csv")
-    hyperparams_df.to_csv(out_path, index=False)
-    print(f"  ✓ Saved: {out_path}")
-    return hyperparams_df
+        rows.append({
+            "benchmark":          task,
+            "model":              best_model if best_model else "-",
+            "task_type":          task_type,
+            "leaderboard_metric": metric,
+            "score":              round(best_score, 3) if best_score is not None else "-",
+            "std":                round(best_std, 3) if best_std is not None else "-",
+        })
 
+    df = pd.DataFrame(rows)
+    out_path = os.path.join(output_dir, "benchmark_comparison.csv")
+    df.to_csv(out_path, index=False)
+    print(f"✓ Saved: {out_path}")
 
-def print_preview(df, n=10):
-    with pd.option_context("display.max_columns", None, "display.width", 120):
-        print(df.head(n).to_string(index=False))
+    # Print model win summary
+    wins = df[df["model"] != "-"]["model"].value_counts()
+    print(f"\nBest model per task summary ({len(df)} tasks):")
+    for model, count in wins.items():
+        print(f"  {model}: {count} tasks")
 
+    return df
 
-# ── Entry point ────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate benchmark summary reports")
-    parser.add_argument("--logs",   type=str, default="./model_assets",    help="Directory containing model logs")
-    parser.add_argument("--output", type=str, default="./results", help="Directory to save summary CSVs")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--logs",   type=str, default="./model_assets")
+    parser.add_argument("--output", type=str, default="./results")
     args = parser.parse_args()
 
     os.makedirs(args.output, exist_ok=True)
 
-    print("\nLoading result logs...")
-    df = load_all_results(args.logs)
+    print("Loading logs...")
+    records = load_all_results(args.logs)
+    print(f"Loaded results for {len(records)} tasks.")
 
-    if df.empty:
-        print("\n⚠ No results found. Run run_benchmark.py first.")
-        exit(1)
+    print("\nGenerating benchmark_comparison.csv...")
+    df = generate_comparison_table(records, args.output)
 
-    print(f"Loaded {len(df)} results across {df['model'].nunique()} models and {df['task'].nunique()} tasks.")
-
-    print("\nLoading tuning logs...")
-    tuning_df = load_all_tuning(args.logs)
-    print(f"Loaded {len(tuning_df)} tuning logs.")
-
-    print("\nGenerating summary_by_model.csv...")
-    summary_df = generate_summary_by_model(df, args.output)
-    print_preview(summary_df)
-
-    print("\nGenerating top3_by_task.csv...")
-    top3_df = generate_top3_by_task(df, args.output)
-    print_preview(top3_df)
-
-    print("\nGenerating hyperparams_summary.csv...")
-    hyperparams_df = generate_hyperparams_summary(tuning_df, args.output)
-    print_preview(hyperparams_df)
-
-    print("\n✓ All reports generated successfully.")
+    print("\nFull table:")
+    with pd.option_context("display.max_columns", None, "display.width", 120):
+        print(df.to_string(index=False))
