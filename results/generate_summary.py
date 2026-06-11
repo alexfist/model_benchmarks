@@ -35,7 +35,7 @@ TASKS = [
 def load_all_results(logs_dir):
     records = []
     for model_name in MODELS:
-        model_log_dir = os.path.join(logs_dir, model_name)
+        model_log_dir = os.path.join(logs_dir, model_name, "logs")
         if not os.path.exists(model_log_dir):
             print(f"  ⚠ No logs found for {model_name} — skipping")
             continue
@@ -71,7 +71,7 @@ def load_all_results(logs_dir):
 def load_all_tuning(logs_dir):
     records = []
     for model_name in MODELS:
-        model_log_dir = os.path.join(logs_dir, model_name)
+        model_log_dir = os.path.join(logs_dir, model_name, "logs")
         if not os.path.exists(model_log_dir):
             continue
 
@@ -204,7 +204,7 @@ def print_preview(df, n=10):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate benchmark summary reports")
-    parser.add_argument("--logs",   type=str, default="./logs",    help="Directory containing model logs")
+    parser.add_argument("--logs",   type=str, default="./model_assets",    help="Directory containing model logs")
     parser.add_argument("--output", type=str, default="./results", help="Directory to save summary CSVs")
     args = parser.parse_args()
 

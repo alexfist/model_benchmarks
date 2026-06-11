@@ -12,7 +12,7 @@ This folder contains the benchmark results for all 5 TDC ADMET models.
 
 To regenerate these files after adding new model logs:
 ```bash
-python results/generate_summary.py
+python results/generate_summary.py --logs model_assets
 ```
 
 ---
