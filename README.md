@@ -29,8 +29,7 @@ model_benchmarks/
 ├── results/
 │   ├── README.md                    # Deviations from original pipelines + reproducibility notes
 │   ├── generate_summary.py          # Compiles logs into 3 deliverable CSV tables
-│   ├── summary_by_model.csv         # (generated) per-model scores across all tasks
-│   ├── top3_by_task.csv             # (generated) top 3 models per task
+│   ├── benchmark_comparison.csv     # (generated) Best model across all 22 tasks along with their scores and evaluation metric 
 │   └── hyperparams_summary.csv      # (generated) best hyperparameters per model per task
 │
 └── model_assets/

@@ -6,13 +6,11 @@ This folder contains the benchmark results for all 5 TDC ADMET models.
 
 | File | Description |
 |------|-------------|
-| `summary_by_model.csv` | Per-model scores (mean ± std) across all 22 tasks |
-| `top3_by_task.csv` | Top 3 models per task with training time and GPU memory |
-| `hyperparams_summary.csv` | Best hyperparameters and all combos tried per model per task |
+| `benchmark_comparison.csv` | Best model across all 22 tasks along with their scores and evaluation metric |
 
 To regenerate these files after adding new model logs:
 ```bash
-python results/generate_summary.py --logs model_assets
+python results/generate_summary.py
 ```
 
 ---
