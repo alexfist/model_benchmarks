@@ -24,6 +24,11 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 
+os.environ["LD_LIBRARY_PATH"] = (
+    "/opt/miniforge3/envs/minimol_env/lib/python3.11/site-packages/nvidia/cuda_runtime/lib:"
+    + os.environ.get("LD_LIBRARY_PATH", "")
+)
+
 from tdc.benchmark_group import admet_group
 from molfeat.trans import MoleculeTransformer
 from molfeat.trans.pretrained import PretrainedDGLTransformer
@@ -63,31 +68,52 @@ def build_transformers():
     return transformers
 
 
-def featurize(smiles_list, transformers):
-    features = []
+def featurize(smiles_list, transformers, allowed_names=None):
+    """Featurize molecules. If allowed_names given, only use those transformers.
+    Returns (feature_matrix, list_of_used_names)."""
+    features   = []
+    used_names = []
+    n = len(smiles_list)
     for name, trans in transformers.items():
+        if allowed_names is not None and name not in allowed_names:
+            continue
         try:
             feat = np.array(trans(smiles_list))
             feat = np.nan_to_num(feat, nan=0.0, posinf=0.0, neginf=0.0)
+            if feat.shape[0] != n:
+                print(f"  Warning: {name} returned {feat.shape[0]} rows for {n} molecules — skipping")
+                continue
             features.append(feat)
+            used_names.append(name)
         except Exception as e:
-            print(f"  Warning: {name} featurizer failed: {e} — skipping")
-    return np.hstack(features)
+            print(f"  Warning: {name} failed: {e} — skipping")
+    return np.hstack(features), used_names
 
 
-# ── MapLight + GNN runner with tuning ─────────────────────────────────────────
+def get_global_used_names(transformers, full_data):
+    """Determine which featurizers work on the full dataset.
+    Called once per task before the seed loop."""
+    print("   Checking featurizers on full dataset...")
+    _, used_names = featurize(full_data["Drug"].tolist(), transformers)
+    print(f"   Valid featurizers: {used_names}")
+    return used_names
 
-def run_maplight_gnn(transformers, train, valid, test, task_name, logs_dir):
+
+# ── MapLight + GNN runner ─────────────────────────────────────────────────────
+
+def run_maplight_gnn(transformers, train, valid, test, task_name, logs_dir, global_used_names):
     """
-    Generates concatenated features, tunes CatBoost on validation set.
+    Uses globally determined featurizers (consistent across all seeds),
+    tunes CatBoost on validation set, retrains on train+valid, predicts on test.
     Returns: preds, final_model, best_params
     """
     is_clf           = is_classification_task(train["Y"].values)
     higher_is_better = is_clf
 
-    X_train = featurize(train["Drug"].tolist(), transformers)
-    X_valid = featurize(valid["Drug"].tolist(), transformers)
-    X_test  = featurize(test["Drug"].tolist(),  transformers)
+    # Featurize using globally valid featurizers — consistent across all seeds
+    X_train, _ = featurize(train["Drug"].tolist(), transformers, allowed_names=global_used_names)
+    X_valid, _ = featurize(valid["Drug"].tolist(), transformers, allowed_names=global_used_names)
+    X_test, _  = featurize(test["Drug"].tolist(),  transformers, allowed_names=global_used_names)
 
     y_train = train["Y"].values
     y_valid = valid["Y"].values
@@ -146,17 +172,22 @@ def run_maplight_gnn(transformers, train, valid, test, task_name, logs_dir):
             print(f"     {combo_label} failed: {e}")
             tuning_logs.append({"combo": combo_label, "error": str(e)})
 
-    # Save tuning log
     with open(os.path.join(logs_dir, f"{task_name}_tuning.json"), "w") as f:
         json.dump({
-            "task": task_name, "model": "MapLight_GNN",
-            "tuning_runs": tuning_logs, "best_params": best_params,
+            "task":           task_name,
+            "model":          "MapLight_GNN",
+            "tuning_runs":    tuning_logs,
+            "best_params":    best_params,
             "best_val_score": round(float(best_score), 4) if best_score else None,
         }, f, indent=2)
+
+    if best_params is None:
+        raise RuntimeError(f"All tuning combos failed for {task_name}")
 
     print(f"   Best: {best_params} | val: {best_score:.4f}")
 
     # Retrain on train + valid combined
+    # Safe to vstack since both use same global_used_names
     X_all = np.vstack([X_train, X_valid])
     y_all = np.concatenate([y_train, y_valid])
 
@@ -213,8 +244,13 @@ def run_benchmark(n_runs=5, task_filter=None):
         print(f"── Task: {task_name}")
 
         try:
-            benchmark        = group.get(task_name)
-            test             = benchmark["test"]
+            benchmark = group.get(task_name)
+            test      = benchmark["test"]
+            full_data = benchmark["train_val"]
+
+            # Determine valid featurizers once for this task
+            global_used_names = get_global_used_names(transformers, full_data)
+
             predictions_list = []
             timing_list      = []
 
@@ -231,7 +267,8 @@ def run_benchmark(n_runs=5, task_filter=None):
                 t_start    = time.time()
 
                 preds, final_model, best_params = run_maplight_gnn(
-                    transformers, train, valid, test, task_name, logs_dir
+                    transformers, train, valid, test,
+                    task_name, logs_dir, global_used_names
                 )
 
                 t_end     = time.time()
@@ -254,8 +291,10 @@ def run_benchmark(n_runs=5, task_filter=None):
                     final_model.save_model(os.path.join(task_artifact_dir, "model.cbm"))
                     with open(os.path.join(task_artifact_dir, "hyperparams.json"), "w") as f:
                         json.dump({
-                            "task": task_name, "model": "MapLight_GNN",
-                            "params": best_params, "seed": seed,
+                            "task":      task_name,
+                            "model":     "MapLight_GNN",
+                            "params":    best_params,
+                            "seed":      seed,
                             "timestamp": datetime.now().isoformat(),
                         }, f, indent=2)
 
@@ -290,8 +329,10 @@ def run_benchmark(n_runs=5, task_filter=None):
         except Exception as e:
             print(f"   ✗ FAILED: {e}\n")
             error_result = {
-                "task": task_name, "model": "MapLight_GNN",
-                "error": str(e), "traceback": traceback.format_exc(),
+                "task":      task_name,
+                "model":     "MapLight_GNN",
+                "error":     str(e),
+                "traceback": traceback.format_exc(),
             }
             all_results[task_name] = error_result
             with open(os.path.join(logs_dir, f"{task_name}_error.json"), "w") as f:
