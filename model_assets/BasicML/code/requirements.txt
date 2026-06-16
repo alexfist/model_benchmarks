@@ -1,0 +1,16 @@
+# BasicML Requirements
+# --------------------
+# Simplest environment of all models — pure CPU, standard packages only.
+#
+# Environment setup:
+#   conda create -n basicml_env python=3.10
+#   conda activate basicml_env
+#   conda install -c conda-forge rdkit
+#   pip install -r requirements.txt
+
+PyTDC
+numpy
+pandas
+scikit-learn>=1.0
+xgboost>=1.6
+joblib
