@@ -1,22 +1,25 @@
 # TDC ADMET Benchmarking Project
 
-Internal benchmarking of models from the TDC (Therapeutics Data Commons) leaderboard across all ADMET and Toxicity tasks.
+Internal benchmarking of models from the TDC (Therapeutics Data Commons) ADMET leaderboard. The goal is to reproduce top leaderboard results across 22 standardized drug property prediction tasks, identify which models perform best per task, and provide a clean reproducible benchmark suite for downstream use in ADMET property prediction of new drug candidates.
+
+**Repository:** https://github.com/alexfist/minimol_benchmark  
+**Server:** H100 GPU cluster (192-core Intel Xeon, 2TB RAM, CUDA 12.8)
 
 ---
 
-## Project Overview
+## Models
 
-This project reproduces and evaluates five models from the TDC leaderboard across 22 ADMET benchmark tasks. For each model, we collect performance metrics, training time, and GPU memory usage, then summarize the results to identify which models perform best on which tasks.
-
-**Models evaluated:**
-- MiniMol ✅
-- DeepMol (AutoML) ✅
-- MapLight + GNN ✅
-- AttrMasking ✅
-- ZairaChem ❌ — could not run due to network restrictions (see results/README.md)
-
-**Benchmark groups:**
-- ADMET Benchmark Group (22 tasks)
+| Model | Status | Tasks | Notes |
+|---|---|---|---|
+| MiniMol | ✅ Complete | 22/22 | Data leakage flagged — scores may be inflated |
+| DeepMol | ✅ Complete | 22/22 | |
+| MapLight_GNN | ✅ Complete | 22/22 | Most trustworthy baseline |
+| AttrMasking | ✅ Complete | 22/22 | |
+| AttentiveFP | ✅ Complete | 22/22 | |
+| BasicML | ✅ Complete | 22/22 | |
+| CaliciBoost | ✅ Complete | 1/22 | Caco-2 only by design |
+| BaseBoosting | ❌ Blocked | 0/22 | olorenchemengine requires GitHub access |
+| ZairaChem | ❌ Blocked | 0/22 | Ersilia Hub requires GitHub + DockerHub access |
 
 ---
 
@@ -24,165 +27,135 @@ This project reproduces and evaluates five models from the TDC leaderboard acros
 
 ```
 model_benchmarks/
-│
-├── README.md                        # This file
+├── README.md                       # This file
 ├── results/
-│   ├── README.md                    # Deviations from original pipelines + reproducibility notes
-│   ├── generate_summary.py          # Compiles logs into 3 deliverable CSV tables
-│   ├── benchmark_comparison.csv     # (generated) Best model across all 22 tasks along with their scores and evaluation metric 
-│   └── hyperparams_summary.csv      # (generated) best hyperparameters per model per task
-│
+│   ├── README.md                   # Deviations, reproducibility notes, blocked models
+│   ├── generate_summary.py         # Compiles logs into CSV and Excel outputs
+│   ├── benchmark_comparison.csv    # Best model per task
+│   ├── benchmark_results.csv       # All models × all tasks
+│   ├── benchmark_results.xlsx      # Excel workbook with one sheet per model
+│   └── model_csvs/                 # One CSV per model
+│       ├── MiniMol.csv
+│       ├── DeepMol.csv
+│       └── ...
 └── model_assets/
     ├── MiniMol/
-    │   ├── README.md
-    │   ├── data/
+    │   ├── README.md               # Model description, deviations, setup instructions
+    │   ├── data/                   # TDC datasets (auto-downloaded or symlinked)
     │   ├── code/
-    │   │   ├── run_benchmark.py
-    │   │   ├── check_install.py
-    │   │   └── requirements.txt
-    │   ├── artifacts/
-    │   └── logs/
-    ├── DeepMol/         (same structure)
-    ├── MapLight_GNN/    (same structure)
-    ├── AttrMasking/     (same structure)
-    └── ZairaChem/       (same structure — not run due to network restrictions)
+    │   │   ├── run_benchmark.py    # Main benchmarking script
+    │   │   ├── check_install.py    # Installation verification
+    │   │   └── requirements.txt    # Dependencies + setup instructions
+    │   ├── artifacts/              # Saved models + hyperparams per task
+    │   └── logs/                   # Per-task result JSONs + tuning logs
+    ├── DeepMol/        (same structure)
+    ├── MapLight_GNN/   (same structure)
+    ├── AttrMasking/    (same structure)
+    ├── AttentiveFP/    (same structure)
+    ├── BasicML/        (same structure)
+    ├── CaliciBoost/    (same structure — caco2_wang only)
+    ├── BaseBoosting/   (code only — could not run)
+    └── ZairaChem/      (code only — could not run)
 ```
 
 ---
 
-## Environment Setup
+## How to Run a Model
 
-Each model requires its own conda environment due to conflicting dependencies. Environments must be set up manually — the `run_all.sh` script is provided as a reference but may not work on all systems due to conda activation differences.
+Every model follows the same three-step process. See each model's `README.md` for the exact conda environment name and any model-specific notes.
 
-### Create all environments
+### Step 1 — Set up the environment
+
+Each model has its own conda environment due to conflicting dependencies. Follow the setup instructions in `model_assets/<ModelName>/code/requirements.txt`.
 
 ```bash
-conda create -n minimol_env python=3.11 -y
-conda create -n deepmol_env python=3.10 -y
-conda create -n attrmasking_env python=3.8 -y
-conda create -n maplight_env python=3.10 -y
+conda activate <model_env>
 ```
 
-### Install dependencies
+### Step 2 — Verify installation
 
-Follow the `requirements.txt` in each model's `code/` folder — the install order and special flags matter. See each model's README for exact instructions.
+```bash
+cd model_assets/<ModelName>/code
+python check_install.py
+```
 
-**Important:** Do not use `pip install -r requirements.txt` directly for all models — some require conda installs, specific wheel URLs, or `--no-deps` flags that are documented in comments inside each requirements.txt.
+All checks should pass before running the full benchmark. If any fail, the model's README has troubleshooting steps.
+
+### Step 3 — Run the benchmark
+
+```bash
+# Full benchmark (run in background — some models take 24+ hours)
+nohup python run_benchmark.py > ~/<model_name>.log 2>&1 &
+disown
+
+# Single task for testing
+python run_benchmark.py --task hia_hou --runs 1
+
+# Check progress
+tail -f ~/<model_name>.log
+ls ../logs/*.json | grep -v tuning | grep -v error | wc -l
+```
 
 ---
 
-## How to Run
+## Data
 
-### Step 1 — Verify installation
-
-Run the check script for each model before running the full benchmark:
+TDC datasets are downloaded automatically on first run to each model's `data/` folder. Since `dataverse.harvard.edu` is blocked on the company server, subsequent models symlink to an already-downloaded copy:
 
 ```bash
-conda activate minimol_env
-python model_assets/MiniMol/code/check_install.py
-
-conda activate deepmol_env
-python model_assets/DeepMol/code/check_install.py
-
-conda activate attrmasking_env
-python model_assets/AttrMasking/code/check_install.py
-
-conda activate maplight_env
-python model_assets/MapLight_GNN/code/check_install.py
+cd model_assets/<ModelName>
+ln -s ../MiniMol/data data
 ```
-
-### Step 2 — Run benchmarks
-
-Run each model separately in its own environment. Use `nohup` for long-running models:
-
-```bash
-# MiniMol (~2-3 hours)
-conda activate minimol_env
-cd model_assets/MiniMol/code
-nohup python run_benchmark.py > ~/model_benchmarks/minimol.log 2>&1 &
-disown
-
-# DeepMol (~3-4 hours)
-conda activate deepmol_env
-cd model_assets/DeepMol/code
-nohup python run_benchmark.py > ~/model_benchmarks/deepmol.log 2>&1 &
-disown
-
-# MapLight+GNN (~2-3 hours)
-conda activate maplight_env
-cd model_assets/MapLight_GNN/code
-nohup python run_benchmark.py > ~/model_benchmarks/maplight.log 2>&1 &
-disown
-
-# AttrMasking (~18-24 hours — run overnight)
-conda activate attrmasking_env
-cd model_assets/AttrMasking/code
-nohup python run_benchmark.py > ~/model_benchmarks/attrmasking.log 2>&1 &
-disown
-```
-
-To run a single task for testing:
-```bash
-python run_benchmark.py --task hia_hou
-```
-
-### Step 3 — Monitor progress
-
-```bash
-# Check completed tasks per model
-ls model_assets/MiniMol/logs/ | grep -v tuning | grep "\.json" | wc -l
-ls model_assets/DeepMol/logs/ | grep -v tuning | grep "\.json" | wc -l
-ls model_assets/MapLight_GNN/logs/ | grep -v tuning | grep "\.json" | wc -l
-ls model_assets/AttrMasking/logs/ | grep -v tuning | grep "\.json" | wc -l
-
-# Follow live output
-tail -f ~/model_benchmarks/attrmasking.log
-```
-
-### Step 4 — Generate summary reports
-
-Once all models are done:
-
-```bash
-conda activate minimol_env
-python results/generate_summary.py
-```
-
-This produces three CSV tables in `results/`:
-- `summary_by_model.csv` — scores for each model across all 22 tasks
-- `top3_by_task.csv` — top 3 models per task with time and GPU memory
-- `hyperparams_summary.csv` — best hyperparameters and all combos tried per model per task
 
 ---
 
-## Hardware Used
+## Generating Results
 
-| | Details |
-|---|---|
-| OS | Linux (Ubuntu) |
-| GPU | NVIDIA H100 x8 |
-| CUDA Version | 12.8 |
-| CPU | Intel Xeon Platinum 8558P (192 cores) |
-| RAM | 2TB |
+Once one or more models have finished, generate the summary outputs:
+
+```bash
+cd results
+python generate_summary.py --logs ../model_assets --output .
+```
+
+This produces:
+- `benchmark_comparison.csv` — best model per task
+- `benchmark_results.csv` — all models × all tasks in one flat table
+- `model_csvs/<model>.csv` — one CSV per model
+- `benchmark_results.xlsx` — Excel workbook with one sheet per model
 
 ---
 
 ## TDC Protocol
 
-All tasks follow TDC standard protocol:
-- Scaffold split via `split_type="default"`
-- Seeds [1, 2, 3, 4, 5]
+All models follow the standard TDC evaluation protocol:
+- Scaffold split (`split_type="default"`)
+- 5 seeds (seeds 1–5)
 - `group.evaluate_many()` for official scoring
 - Mean ± std reported across 5 seeds
+
+---
+
+## Hardware
+
+| | |
+|---|---|
+| GPU | NVIDIA H100 × 8 |
+| CPU | Intel Xeon Platinum 8558P (192 cores) |
+| RAM | 2TB |
+| CUDA | 12.8 |
+| OS | Ubuntu 24 |
 
 ---
 
 ## References
 
 - [TDC Platform](https://tdcommons.ai)
-- [TDC Leaderboard](https://tdcommons.ai/benchmark/admet_group/overview/)
-- [MiniMol GitHub](https://github.com/graphcore-research/minimol)
-- [DeepMol GitHub](https://github.com/BioSystemsUM/DeepMol)
-- [ZairaChem GitHub](https://github.com/ersilia-os/zaira-chem)
-- [MapLight GitHub](https://github.com/maplightrx/MapLight-TDC)
-- [AttrMasking Paper](https://arxiv.org/abs/1905.12265)
+- [TDC ADMET Leaderboard](https://tdcommons.ai/benchmark/admet_group/overview/)
+- [MiniMol](https://github.com/graphcore-research/minimol)
+- [DeepMol](https://github.com/BioSystemsUM/DeepMol)
+- [MapLight](https://github.com/maplightrx/MapLight-TDC)
+- [AttrMasking / AttentiveFP (DeepPurpose)](https://github.com/kexinhuang12345/DeepPurpose)
+- [CaliciBoost](https://github.com/Calici/CaliciBoost)
+- [ZairaChem](https://github.com/ersilia-os/zaira-chem)
+- [Oloren ChemEngine](https://github.com/Oloren-AI/olorenchemengine)
