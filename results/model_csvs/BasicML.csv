@@ -1,13 +1,13 @@
 benchmark,model,algorithm,task_type,leaderboard_metric,score,std,status
-caco2_wang,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
-hia_hou,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
-pgp_broccatelli,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
-bioavailability_ma,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
-lipophilicity_astrazeneca,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
-solubility_aqsoldb,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
-bbb_martins,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
-ppbr_az,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
-vdss_lombardo,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
+caco2_wang,BasicML,ExtraTrees,regression,mae,0.353,0.083,complete
+hia_hou,BasicML,LogisticRegression,binary,roc-auc,0.922,0.006,complete
+pgp_broccatelli,BasicML,RandomForest,binary,roc-auc,0.884,0.008,complete
+bioavailability_ma,BasicML,RandomForest,binary,roc-auc,0.676,0.012,complete
+lipophilicity_astrazeneca,BasicML,XGBoost,regression,mae,0.64,0.004,complete
+solubility_aqsoldb,BasicML,ExtraTrees,regression,mae,0.834,0.011,complete
+bbb_martins,BasicML,AdaBoost,binary,roc-auc,0.875,0.017,complete
+ppbr_az,BasicML,AdaBoost,regression,mae,9.037,0.276,complete
+vdss_lombardo,BasicML,GradientBoosting,regression,spearman,0.482,0.014,complete
 cyp2d6_veith,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
 cyp3a4_veith,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
 cyp2c9_veith,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
