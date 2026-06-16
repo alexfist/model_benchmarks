@@ -3,7 +3,7 @@ generate_summary.py
 -------------------
 Produces a benchmark results Excel workbook with multiple sheets:
   - Sheet 1 "TDC_Leaderboard": Official TDC top 5 per task
-  - Sheet 2+ per model: Reproduced results in leaderboard format
+  - Sheet 2+ per model: Reproduced results across tasks
   - Also saves benchmark_comparison.csv for quick reference
 
 Usage:
@@ -20,14 +20,57 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 
-MODELS = ["MiniMol", "DeepMol", "MapLight_GNN", "AttrMasking", "ZairaChem"]
+MODELS = [
+    "MiniMol",
+    "DeepMol",
+    "MapLight_GNN",
+    "AttrMasking",
+    "AttentiveFP",
+    "BasicML",
+    "CaliciBoost",
+    "BaseBoosting",
+    "ZairaChem",
+]
 
 MODEL_ALGORITHM = {
-    "MiniMol":     "Random Forest",
-    "DeepMol":     "Random Forest / XGBoost",
-    "MapLight_GNN":"Gradient Boosted Trees",
-    "AttrMasking": "Fine-tuned GNN",
-    "ZairaChem":   "Ensemble",
+    "MiniMol":      "Random Forest on GNN fingerprint",
+    "DeepMol":      "Random Forest / XGBoost (AutoML)",
+    "MapLight_GNN": "CatBoost on concatenated fingerprints + GIN embeddings",
+    "AttrMasking":  "Fine-tuned GIN (pre-trained, attribute masking)",
+    "AttentiveFP":  "Graph Attention Network (trains from scratch)",
+    "BasicML":      "Best of 10 sklearn/XGBoost models on 31 RDKit descriptors",
+    "CaliciBoost":  "XGBoost on top-ranked PaDEL descriptors (Caco-2 only)",
+    "BaseBoosting": "Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN)",
+    "ZairaChem":    "Ensemble (XGBoost/LightGBM/RF/NN on Ersilia descriptors)",
+}
+
+# Models that could not be run — shown as blocked sheets in Excel
+BLOCKED_MODELS = {
+    "ZairaChem": (
+        "ZairaChem — Could Not Run",
+        [
+            "Reason: Ersilia Model Hub requires network access to GitHub and DockerHub.",
+            "Both are blocked on the company server.",
+            "eos2gw4 and eos2db3 model weights are stored in Git LFS which is also blocked.",
+            "Only eos5axz (deterministic Morgan fingerprints) could be fetched.",
+            "ZairaChem can only be run in an environment with unrestricted internet access.",
+        ]
+    ),
+    "BaseBoosting": (
+        "BaseBoosting — Could Not Run",
+        [
+            "Reason: olorenchemengine (OCE) is not available as a prebuilt wheel on PyPI.",
+            "Installation requires cloning from GitHub (github.com/Oloren-AI/olorenchemengine),",
+            "which is blocked by the company server firewall.",
+            "All three install methods attempted: pip, Tsinghua mirror, git clone — all failed.",
+            "BaseBoosting can only be run on a machine with unrestricted internet access to GitHub.",
+        ]
+    ),
+}
+
+# CaliciBoost only covers caco2_wang
+MODEL_TASK_COVERAGE = {
+    "CaliciBoost": {"caco2_wang"},  # only task this model covers
 }
 
 TASKS = [
@@ -60,7 +103,7 @@ TASK_TYPE = {
     "herg": "binary", "ames": "binary", "dili": "binary",
 }
 
-# Official TDC leaderboard top 5 data
+# Official TDC leaderboard top 5 per task
 TDC_LEADERBOARD = [
     ("caco2_wang","CaliciBoost","regression","MAE",0.256,0.006),
     ("caco2_wang","XG Boost","regression","MAE",0.274,0.004),
@@ -175,6 +218,8 @@ TDC_LEADERBOARD = [
 ]
 
 
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
 def load_all_results(logs_dir):
     records = {}
     for model_name in MODELS:
@@ -184,19 +229,23 @@ def load_all_results(logs_dir):
         log_files = glob(os.path.join(model_log_dir, "*.json"))
         log_files = [f for f in log_files
                      if not os.path.basename(f).startswith("_")
-                     and "_tuning" not in os.path.basename(f)]
+                     and "_tuning" not in os.path.basename(f)
+                     and "_error"  not in os.path.basename(f)]
         for log_file in log_files:
             with open(log_file) as f:
                 result = json.load(f)
             if "error" in result or result.get("status") == "skipped":
                 continue
             task = result.get("task")
+            if not task:
+                continue
             if task not in records:
                 records[task] = {}
             records[task][model_name] = {
                 "score_mean": result.get("score_mean"),
                 "score_std":  result.get("score_std"),
                 "metric":     result.get("metric", ""),
+                "algorithm":  result.get("algorithm", MODEL_ALGORITHM.get(model_name, "-")),
             }
     return records
 
@@ -204,19 +253,21 @@ def load_all_results(logs_dir):
 def style_header(ws, row, cols, bg_color="1F4E79", font_color="FFFFFF"):
     for col in range(1, cols + 1):
         cell = ws.cell(row=row, column=col)
-        cell.font = Font(bold=True, color=font_color, name="Arial", size=10)
-        cell.fill = PatternFill("solid", start_color=bg_color)
+        cell.font      = Font(bold=True, color=font_color, name="Arial", size=10)
+        cell.fill      = PatternFill("solid", start_color=bg_color)
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
 
 
 def style_row(ws, row, cols, bg_color=None):
     for col in range(1, cols + 1):
         cell = ws.cell(row=row, column=col)
-        cell.font = Font(name="Arial", size=10)
+        cell.font      = Font(name="Arial", size=10)
         cell.alignment = Alignment(horizontal="center", vertical="center")
         if bg_color:
             cell.fill = PatternFill("solid", start_color=bg_color)
 
+
+# ── Sheet builders ────────────────────────────────────────────────────────────
 
 def add_leaderboard_sheet(wb):
     ws = wb.create_sheet("TDC_Leaderboard")
@@ -238,37 +289,72 @@ def add_leaderboard_sheet(wb):
     ws.column_dimensions["G"].width = 8
 
 
-def add_model_sheet(wb, model_name, records):
+def add_blocked_sheet(wb, model_name):
+    """Add a sheet for models that could not be run."""
     ws = wb.create_sheet(model_name)
+    title, reasons = BLOCKED_MODELS[model_name]
 
-    if model_name == "ZairaChem":
-        ws["A1"] = "ZairaChem — Could not run"
-        ws["A1"].font = Font(bold=True, color="FF0000", name="Arial", size=12)
-        ws["A2"] = "Reason: Ersilia Model Hub requires network access to GitHub and DockerHub."
-        ws["A3"] = "Both are blocked on the company server."
-        ws["A4"] = "eos2gw4 and eos2db3 model weights are stored in Git LFS which is also blocked."
-        ws["A5"] = "ZairaChem can only be run in an environment with unrestricted internet access."
-        for row in range(1, 6):
-            ws.cell(row=row, column=1).font = Font(name="Arial", size=10)
-        ws.column_dimensions["A"].width = 80
+    ws["A1"] = f"❌ {title}"
+    ws["A1"].font = Font(bold=True, color="FF0000", name="Arial", size=12)
+
+    for i, line in enumerate(reasons, start=2):
+        ws.cell(row=i, column=1).value = line
+        ws.cell(row=i, column=1).font  = Font(name="Arial", size=10)
+
+    ws.column_dimensions["A"].width = 90
+
+
+def add_model_sheet(wb, model_name, records):
+    """Add a results sheet for a model that ran successfully."""
+
+    if model_name in BLOCKED_MODELS:
+        add_blocked_sheet(wb, model_name)
         return
 
-    headers = ["benchmark", "model", "algorithm", "task_type", "leaderboard_metric", "score", "std"]
-    ws.append(headers)
-    style_header(ws, 1, len(headers))
+    ws = wb.create_sheet(model_name)
 
-    algorithm = MODEL_ALGORITHM.get(model_name, "-")
+    # For CaliciBoost: note partial coverage at top
+    if model_name in MODEL_TASK_COVERAGE:
+        covered = MODEL_TASK_COVERAGE[model_name]
+        ws["A1"] = (f"Note: {model_name} only covers {len(covered)} task(s): "
+                    f"{', '.join(sorted(covered))}. "
+                    f"All other tasks are marked N/A.")
+        ws["A1"].font = Font(bold=True, color="7F6000", name="Arial", size=10)
+        ws.append([])  # blank row
+        start_row = 3
+    else:
+        start_row = 1
+
+    headers = ["benchmark", "model", "algorithm", "task_type",
+               "leaderboard_metric", "score", "std"]
+    ws.append(headers)
+    style_header(ws, ws.max_row, len(headers))
+
+    # Determine which tasks to show for this model
+    task_coverage = MODEL_TASK_COVERAGE.get(model_name, None)
 
     for i, task in enumerate(TASKS):
+        # Skip tasks outside this model's coverage
+        if task_coverage is not None and task not in task_coverage:
+            ws.append([task, model_name,
+                       MODEL_ALGORITHM.get(model_name, "-"),
+                       TASK_TYPE.get(task, "-"),
+                       "N/A", "N/A", "N/A"])
+            style_row(ws, ws.max_row, len(headers),
+                      bg_color="F2F2F2" if i % 2 == 0 else "E0E0E0")
+            continue
+
         task_data = records.get(task, {}).get(model_name)
-        if task_data and task_data["score_mean"] is not None:
-            score = round(task_data["score_mean"], 3)
-            std   = round(task_data["score_std"], 3)
-            metric = task_data["metric"]
+        if task_data and task_data.get("score_mean") is not None:
+            score     = round(task_data["score_mean"], 4)
+            std       = round(task_data["score_std"],  4)
+            metric    = task_data["metric"]
+            algorithm = task_data.get("algorithm", MODEL_ALGORITHM.get(model_name, "-"))
         else:
-            score  = "-"
-            std    = "-"
-            metric = "-"
+            score     = "pending" if model_name not in BLOCKED_MODELS else "-"
+            std       = "-"
+            metric    = "-"
+            algorithm = MODEL_ALGORITHM.get(model_name, "-")
 
         task_type = TASK_TYPE.get(task, "-")
         ws.append([task, model_name, algorithm, task_type, metric, score, std])
@@ -277,62 +363,196 @@ def add_model_sheet(wb, model_name, records):
 
     ws.column_dimensions["A"].width = 35
     ws.column_dimensions["B"].width = 18
-    ws.column_dimensions["C"].width = 28
+    ws.column_dimensions["C"].width = 45
     ws.column_dimensions["D"].width = 12
     ws.column_dimensions["E"].width = 18
     ws.column_dimensions["F"].width = 10
     ws.column_dimensions["G"].width = 8
 
 
+# ── CSV comparison ────────────────────────────────────────────────────────────
+
 def generate_csv(records, output_dir):
+    # Only include runnable models in the comparison
+    runnable_models = [m for m in MODELS if m not in BLOCKED_MODELS]
+
     rows = []
     for task in TASKS:
-        task_records = records.get(task, {})
-        lower_is_better = task in LOWER_IS_BETTER
-        metric = "-"
-        for model in MODELS:
-            if model in task_records and task_records[model]["metric"]:
+        task_records     = records.get(task, {})
+        lower_is_better  = task in LOWER_IS_BETTER
+        metric           = "-"
+
+        # Get metric name from any available result
+        for model in runnable_models:
+            if model in task_records and task_records[model].get("metric"):
                 metric = task_records[model]["metric"]
                 break
+
         best_score = None
         best_model = None
         best_std   = None
-        for model in MODELS:
+        best_algo  = None
+
+        for model in runnable_models:
+            # Skip if model doesn't cover this task
+            coverage = MODEL_TASK_COVERAGE.get(model)
+            if coverage is not None and task not in coverage:
+                continue
             if model not in task_records:
                 continue
-            mean = task_records[model]["score_mean"]
-            std  = task_records[model]["score_std"]
+            mean = task_records[model].get("score_mean")
+            std  = task_records[model].get("score_std")
             if mean is None:
                 continue
             is_better = (
                 best_score is None or
-                (lower_is_better and mean < best_score) or
+                (lower_is_better     and mean < best_score) or
                 (not lower_is_better and mean > best_score)
             )
             if is_better:
                 best_score = mean
                 best_model = model
                 best_std   = std
+                best_algo  = task_records[model].get(
+                    "algorithm", MODEL_ALGORITHM.get(model, "-")
+                )
+
         rows.append({
             "benchmark":          task,
-            "model":              best_model if best_model else "-",
-            "algorithm":          MODEL_ALGORITHM.get(best_model, "-") if best_model else "-",
+            "best_model":         best_model if best_model else "-",
+            "algorithm":          best_algo  if best_algo  else "-",
             "task_type":          TASK_TYPE.get(task, "-"),
             "leaderboard_metric": metric,
-            "score":              round(best_score, 3) if best_score is not None else "-",
-            "std":                round(best_std, 3) if best_std is not None else "-",
+            "score":              round(best_score, 4) if best_score is not None else "-",
+            "std":                round(best_std,   4) if best_std   is not None else "-",
         })
+
     df = pd.DataFrame(rows)
     out_path = os.path.join(output_dir, "benchmark_comparison.csv")
     df.to_csv(out_path, index=False)
     print(f"✓ Saved CSV: {out_path}")
 
-    wins = df[df["model"] != "-"]["model"].value_counts()
-    print(f"\nBest model per task:")
+    wins = df[df["best_model"] != "-"]["best_model"].value_counts()
+    print(f"\nBest model per task (among completed runs):")
     for model, count in wins.items():
-        print(f"  {model}: {count} tasks")
+        print(f"  {model}: {count} task(s)")
     return df
 
+
+def generate_all_results_csv(records, output_dir):
+    """
+    benchmark_results.csv — all models × all tasks in one flat table.
+    One row per (task, model) combination.
+    """
+    runnable_models = [m for m in MODELS if m not in BLOCKED_MODELS]
+    rows = []
+
+    for task in TASKS:
+        task_records = records.get(task, {})
+        for model in runnable_models:
+            coverage = MODEL_TASK_COVERAGE.get(model)
+            if coverage is not None and task not in coverage:
+                continue
+
+            task_data = task_records.get(model)
+            if task_data and task_data.get("score_mean") is not None:
+                score     = round(task_data["score_mean"], 4)
+                std       = round(task_data["score_std"],  4)
+                metric    = task_data["metric"]
+                algorithm = task_data.get("algorithm", MODEL_ALGORITHM.get(model, "-"))
+                status    = "complete"
+            else:
+                score     = "-"
+                std       = "-"
+                metric    = "-"
+                algorithm = MODEL_ALGORITHM.get(model, "-")
+                status    = "pending"
+
+            rows.append({
+                "benchmark":          task,
+                "model":              model,
+                "algorithm":          algorithm,
+                "task_type":          TASK_TYPE.get(task, "-"),
+                "leaderboard_metric": metric,
+                "score":              score,
+                "std":                std,
+                "status":             status,
+            })
+
+    df = pd.DataFrame(rows)
+    out_path = os.path.join(output_dir, "benchmark_results.csv")
+    df.to_csv(out_path, index=False)
+    print(f"✓ Saved CSV: {out_path}")
+    return df
+
+
+def generate_model_csvs(records, output_dir):
+    """
+    Per-model CSVs — one file per model, saved to output_dir/model_csvs/.
+    Each file has one row per task the model covers.
+    """
+    csv_dir = os.path.join(output_dir, "model_csvs")
+    os.makedirs(csv_dir, exist_ok=True)
+
+    runnable_models = [m for m in MODELS if m not in BLOCKED_MODELS]
+
+    for model in runnable_models:
+        rows = []
+        coverage = MODEL_TASK_COVERAGE.get(model)
+
+        for task in TASKS:
+            # Skip tasks outside model's coverage
+            if coverage is not None and task not in coverage:
+                continue
+
+            task_data = records.get(task, {}).get(model)
+            if task_data and task_data.get("score_mean") is not None:
+                score     = round(task_data["score_mean"], 4)
+                std       = round(task_data["score_std"],  4)
+                metric    = task_data["metric"]
+                algorithm = task_data.get("algorithm", MODEL_ALGORITHM.get(model, "-"))
+                status    = "complete"
+            else:
+                score     = "-"
+                std       = "-"
+                metric    = "-"
+                algorithm = MODEL_ALGORITHM.get(model, "-")
+                status    = "pending"
+
+            rows.append({
+                "benchmark":          task,
+                "model":              model,
+                "algorithm":          algorithm,
+                "task_type":          TASK_TYPE.get(task, "-"),
+                "leaderboard_metric": metric,
+                "score":              score,
+                "std":                std,
+                "status":             status,
+            })
+
+        df = pd.DataFrame(rows)
+        out_path = os.path.join(csv_dir, f"{model}.csv")
+        df.to_csv(out_path, index=False)
+        print(f"✓ Saved CSV: {out_path}")
+
+    # Also save blocked model stubs so every model has a file
+    for model in BLOCKED_MODELS:
+        df = pd.DataFrame([{
+            "benchmark":          "-",
+            "model":              model,
+            "algorithm":          MODEL_ALGORITHM.get(model, "-"),
+            "task_type":          "-",
+            "leaderboard_metric": "-",
+            "score":              "-",
+            "std":                "-",
+            "status":             "could_not_run",
+        }])
+        out_path = os.path.join(csv_dir, f"{model}.csv")
+        df.to_csv(out_path, index=False)
+        print(f"✓ Saved CSV: {out_path} (blocked — could not run)")
+
+
+# ── Entry point ───────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -344,16 +564,23 @@ if __name__ == "__main__":
 
     print("Loading logs...")
     records = load_all_results(args.logs)
-    print(f"Loaded results for {len(records)} tasks.")
+    print(f"Loaded results for {len(records)} tasks across "
+          f"{sum(len(v) for v in records.values())} model-task pairs.")
 
-    # Generate CSV
-    print("\nGenerating benchmark_comparison.csv...")
-    df = generate_csv(records, args.output)
+    # ── CSVs ──────────────────────────────────────────────────────────────────
+    print("\nGenerating benchmark_comparison.csv (best model per task)...")
+    generate_csv(records, args.output)
 
-    # Generate Excel workbook
+    print("\nGenerating benchmark_results.csv (all models × all tasks)...")
+    generate_all_results_csv(records, args.output)
+
+    print("\nGenerating per-model CSVs (results/model_csvs/<model>.csv)...")
+    generate_model_csvs(records, args.output)
+
+    # ── Excel ─────────────────────────────────────────────────────────────────
     print("\nGenerating benchmark_results.xlsx...")
     wb = Workbook()
-    wb.remove(wb.active)  # remove default sheet
+    wb.remove(wb.active)
 
     add_leaderboard_sheet(wb)
     for model in MODELS:
@@ -363,3 +590,9 @@ if __name__ == "__main__":
     wb.save(xlsx_path)
     print(f"✓ Saved Excel: {xlsx_path}")
     print(f"\nSheets: TDC_Leaderboard, {', '.join(MODELS)}")
+
+    print("\n✓ All outputs saved to:", args.output)
+    print("  benchmark_comparison.csv  — best model per task")
+    print("  benchmark_results.csv     — all models × all tasks")
+    print("  model_csvs/<model>.csv    — one file per model")
+    print("  benchmark_results.xlsx    — Excel workbook with all sheets")

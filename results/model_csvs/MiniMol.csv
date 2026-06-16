@@ -1,0 +1,23 @@
+benchmark,model,algorithm,task_type,leaderboard_metric,score,std,status
+caco2_wang,MiniMol,Random Forest on GNN fingerprint,regression,-,-,-,pending
+hia_hou,MiniMol,Random Forest on GNN fingerprint,binary,-,-,-,pending
+pgp_broccatelli,MiniMol,Random Forest on GNN fingerprint,binary,-,-,-,pending
+bioavailability_ma,MiniMol,Random Forest on GNN fingerprint,binary,-,-,-,pending
+lipophilicity_astrazeneca,MiniMol,Random Forest on GNN fingerprint,regression,-,-,-,pending
+solubility_aqsoldb,MiniMol,Random Forest on GNN fingerprint,regression,-,-,-,pending
+bbb_martins,MiniMol,Random Forest on GNN fingerprint,binary,-,-,-,pending
+ppbr_az,MiniMol,Random Forest on GNN fingerprint,regression,-,-,-,pending
+vdss_lombardo,MiniMol,Random Forest on GNN fingerprint,regression,-,-,-,pending
+cyp2d6_veith,MiniMol,Random Forest on GNN fingerprint,binary,-,-,-,pending
+cyp3a4_veith,MiniMol,Random Forest on GNN fingerprint,binary,-,-,-,pending
+cyp2c9_veith,MiniMol,Random Forest on GNN fingerprint,binary,-,-,-,pending
+cyp2c9_substrate_carbonmangels,MiniMol,Random Forest on GNN fingerprint,binary,-,-,-,pending
+cyp2d6_substrate_carbonmangels,MiniMol,Random Forest on GNN fingerprint,binary,-,-,-,pending
+cyp3a4_substrate_carbonmangels,MiniMol,Random Forest on GNN fingerprint,binary,-,-,-,pending
+half_life_obach,MiniMol,Random Forest on GNN fingerprint,regression,-,-,-,pending
+clearance_hepatocyte_az,MiniMol,Random Forest on GNN fingerprint,regression,-,-,-,pending
+clearance_microsome_az,MiniMol,Random Forest on GNN fingerprint,regression,-,-,-,pending
+ld50_zhu,MiniMol,Random Forest on GNN fingerprint,regression,-,-,-,pending
+herg,MiniMol,Random Forest on GNN fingerprint,binary,-,-,-,pending
+ames,MiniMol,Random Forest on GNN fingerprint,binary,-,-,-,pending
+dili,MiniMol,Random Forest on GNN fingerprint,binary,-,-,-,pending

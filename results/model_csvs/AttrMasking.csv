@@ -1,0 +1,23 @@
+benchmark,model,algorithm,task_type,leaderboard_metric,score,std,status
+caco2_wang,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,-,-,-,pending
+hia_hou,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,-,-,-,pending
+pgp_broccatelli,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,-,-,-,pending
+bioavailability_ma,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,-,-,-,pending
+lipophilicity_astrazeneca,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,-,-,-,pending
+solubility_aqsoldb,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,-,-,-,pending
+bbb_martins,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,-,-,-,pending
+ppbr_az,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,-,-,-,pending
+vdss_lombardo,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,-,-,-,pending
+cyp2d6_veith,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,-,-,-,pending
+cyp3a4_veith,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,-,-,-,pending
+cyp2c9_veith,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,-,-,-,pending
+cyp2c9_substrate_carbonmangels,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,-,-,-,pending
+cyp2d6_substrate_carbonmangels,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,-,-,-,pending
+cyp3a4_substrate_carbonmangels,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,-,-,-,pending
+half_life_obach,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,-,-,-,pending
+clearance_hepatocyte_az,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,-,-,-,pending
+clearance_microsome_az,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,-,-,-,pending
+ld50_zhu,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,-,-,-,pending
+herg,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,-,-,-,pending
+ames,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,-,-,-,pending
+dili,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,-,-,-,pending
