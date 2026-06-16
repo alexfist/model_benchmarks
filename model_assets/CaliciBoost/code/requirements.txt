@@ -1,0 +1,30 @@
+# CaliciBoost Requirements
+# -------------------------
+# CaliciBoost requires Java for PaDEL-Descriptor — this is the key dependency.
+#
+# Environment setup:
+#   conda create -n caliciboost_env python=3.10
+#   conda activate caliciboost_env
+#
+# Step 1 — Install Java (required for PaDEL):
+#   conda install -c conda-forge openjdk -y
+#   # Verify: java -version
+#
+# Step 2 — Install Python packages:
+#   pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+#
+# Step 3 — Verify padelpy works (it downloads PaDEL jar on first use):
+#   python -c "from padelpy import from_smiles; print(from_smiles('CC', descriptors=True, fingerprints=False))"
+#
+# NOTE: padelpy downloads the PaDEL-Descriptor jar (~50MB) from GitHub on
+# first use. If GitHub is blocked, manually download from:
+#   https://github.com/ecrl/padelpy/releases
+# and place it at: ~/.padelpy/PaDEL-Descriptor.jar
+
+PyTDC
+numpy
+pandas
+scikit-learn>=1.0
+xgboost>=1.6
+joblib
+padelpy>=0.1.14
