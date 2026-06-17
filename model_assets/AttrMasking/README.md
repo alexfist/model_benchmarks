@@ -9,7 +9,7 @@ The model is built on a **GIN (Graph Isomorphism Network)** backbone, pre-traine
 ---
 
 ## The GIN Architecture
-
+\
 Unlike standard GNNs which aggregate neighbor information by averaging, GIN uses **sum aggregation** with a learned parameter:
 
 ```

@@ -77,42 +77,65 @@ N_TOP_FEATURES = 200
 
 def compute_padel_descriptors(smiles_list):
     """
-    Compute PaDEL 2D + 3D descriptors for a list of SMILES.
-    Returns (feature_matrix, feature_names) or raises if padelpy not available.
+    Compute PaDEL 2D + 3D descriptors for a list of SMILES using batch mode.
+    Writes all SMILES to a temp file and calls PaDEL once — much faster than
+    calling from_smiles() per molecule.
 
-    PaDEL produces 1875 descriptors per molecule (1444 2D + 431 3D).
-    NaN values are filled with 0.
+    Returns (feature_matrix, feature_names).
+    NaN/Inf values are filled with 0.
     """
+    import tempfile
+    from padelpy import padeldescriptor
+
     if not PADEL_AVAILABLE:
         raise RuntimeError(
             "padelpy not installed. Run: pip install padelpy\n"
             "PaDEL-Descriptor Java software also required — see README."
         )
 
-    print(f"   Computing PaDEL descriptors for {len(smiles_list)} molecules...")
-    all_rows = []
-    feature_names = None
+    print(f"   Computing PaDEL descriptors for {len(smiles_list)} molecules (batch mode)...")
 
-    for i, smi in enumerate(smiles_list):
-        try:
-            desc = from_smiles(smi, fingerprints=False, descriptors=True)
-            if feature_names is None:
-                feature_names = list(desc.keys())
-            row = [float(v) if v not in ("", None) else 0.0
-                   for v in desc.values()]
-        except Exception:
-            if feature_names is not None:
-                row = [0.0] * len(feature_names)
-            else:
-                row = []
-        all_rows.append(row)
+    # Write SMILES to a temp file — PaDEL reads this in one Java call
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".smi",
+                                     delete=False) as smi_file:
+        smi_path = smi_file.name
+        for i, smi in enumerate(smiles_list):
+            smi_file.write(f"{smi}\tmol{i}\n")
 
-        if (i + 1) % 100 == 0:
-            print(f"     {i + 1}/{len(smiles_list)} molecules processed")
+    out_csv = smi_path.replace(".smi", "_padel.csv")
 
-    X = np.array(all_rows, dtype=np.float32)
-    X = np.nan_to_num(X, nan=0.0, posinf=0.0, neginf=0.0)
-    return X, feature_names
+    try:
+        padeldescriptor(
+            mol_dir=smi_path,
+            d_file=out_csv,
+            d_2d=True,
+            d_3d=True,
+            fingerprints=False,
+            convert3d=True,
+            retainorder=True,
+            threads=8,
+        )
+
+        df = pd.read_csv(out_csv)
+
+        # Drop the Name column
+        if "Name" in df.columns:
+            df = df.drop(columns=["Name"])
+
+        feature_names = list(df.columns)
+        X = df.values.astype(np.float32)
+        X = np.nan_to_num(X, nan=0.0, posinf=0.0, neginf=0.0)
+
+        print(f"   Done — {X.shape[0]} molecules × {X.shape[1]} descriptors")
+        return X, feature_names
+
+    finally:
+        # Clean up temp files
+        for f in [smi_path, out_csv]:
+            try:
+                os.remove(f)
+            except Exception:
+                pass
 
 
 def select_top_features(X_train, y_train, feature_names, n_top=N_TOP_FEATURES):
