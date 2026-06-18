@@ -109,11 +109,11 @@ def compute_padel_descriptors(smiles_list):
             mol_dir=smi_path,
             d_file=out_csv,
             d_2d=True,
-            d_3d=True,
+            d_3d=False,
             fingerprints=False,
-            convert3d=True,
+            convert3d=False,
             retainorder=True,
-            threads=8,
+            threads=16,
         )
 
         df = pd.read_csv(out_csv)
