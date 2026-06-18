@@ -58,77 +58,77 @@ cyp2d6_veith,MiniMol,Random Forest on GNN fingerprint,binary,pr-auc,0.663,0.004,
 cyp2d6_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.63,0.026,complete
 cyp2d6_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.782,0.007,complete
 cyp2d6_veith,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,pr-auc,0.754,0.001,complete
-cyp2d6_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
-cyp2d6_veith,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+cyp2d6_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.67,0.008,complete
+cyp2d6_veith,BasicML,ExtraTrees,binary,pr-auc,0.603,0.021,complete
 cyp3a4_veith,MiniMol,Random Forest on GNN fingerprint,binary,pr-auc,0.858,0.001,complete
 cyp3a4_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.835,0.007,complete
 cyp3a4_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.916,0.001,complete
 cyp3a4_veith,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,pr-auc,0.911,0.001,complete
-cyp3a4_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
-cyp3a4_veith,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+cyp3a4_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.855,0.003,complete
+cyp3a4_veith,BasicML,XGBoost,binary,pr-auc,0.801,0.003,complete
 cyp2c9_veith,MiniMol,Random Forest on GNN fingerprint,binary,pr-auc,0.779,0.002,complete
 cyp2c9_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.733,0.003,complete
 cyp2c9_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.861,0.004,complete
 cyp2c9_veith,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,pr-auc,0.84,0.002,complete
-cyp2c9_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
-cyp2c9_veith,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+cyp2c9_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.764,0.015,complete
+cyp2c9_veith,BasicML,Bagging,binary,pr-auc,0.725,0.009,complete
 cyp2c9_substrate_carbonmangels,MiniMol,Random Forest on GNN fingerprint,binary,pr-auc,0.424,0.023,complete
 cyp2c9_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.377,0.016,complete
 cyp2c9_substrate_carbonmangels,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.43,0.015,complete
 cyp2c9_substrate_carbonmangels,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,pr-auc,0.443,0.032,complete
-cyp2c9_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
-cyp2c9_substrate_carbonmangels,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+cyp2c9_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.482,0.007,complete
+cyp2c9_substrate_carbonmangels,BasicML,RandomForest,binary,pr-auc,0.388,0.05,complete
 cyp2d6_substrate_carbonmangels,MiniMol,Random Forest on GNN fingerprint,binary,pr-auc,0.713,0.006,complete
 cyp2d6_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.649,0.023,complete
 cyp2d6_substrate_carbonmangels,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.717,0.006,complete
 cyp2d6_substrate_carbonmangels,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,pr-auc,0.738,0.016,complete
-cyp2d6_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
-cyp2d6_substrate_carbonmangels,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+cyp2d6_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.589,0.025,complete
+cyp2d6_substrate_carbonmangels,BasicML,AdaBoost,binary,pr-auc,0.61,0.015,complete
 cyp3a4_substrate_carbonmangels,MiniMol,Random Forest on GNN fingerprint,binary,roc-auc,0.649,0.01,complete
 cyp3a4_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.634,0.01,complete
 cyp3a4_substrate_carbonmangels,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.641,0.009,complete
 cyp3a4_substrate_carbonmangels,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,roc-auc,0.63,0.011,complete
-cyp3a4_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
-cyp3a4_substrate_carbonmangels,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+cyp3a4_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.598,0.011,complete
+cyp3a4_substrate_carbonmangels,BasicML,LogisticRegression,binary,roc-auc,0.596,0.026,complete
 half_life_obach,MiniMol,Random Forest on GNN fingerprint,regression,spearman,0.383,0.027,complete
 half_life_obach,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.399,0.051,complete
 half_life_obach,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,spearman,0.34,0.027,complete
 half_life_obach,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,spearman,0.186,0.202,complete
-half_life_obach,AttentiveFP,Graph Attention Network (trains from scratch),regression,-,-,-,pending
-half_life_obach,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
+half_life_obach,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.06,0.039,complete
+half_life_obach,BasicML,AdaBoost,regression,spearman,0.193,0.03,complete
 clearance_hepatocyte_az,MiniMol,Random Forest on GNN fingerprint,regression,spearman,0.42,0.017,complete
 clearance_hepatocyte_az,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.273,0.009,complete
 clearance_hepatocyte_az,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,spearman,0.513,0.019,complete
 clearance_hepatocyte_az,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,spearman,0.419,0.019,complete
-clearance_hepatocyte_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,-,-,-,pending
-clearance_hepatocyte_az,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
+clearance_hepatocyte_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.259,0.039,complete
+clearance_hepatocyte_az,BasicML,XGBoost,regression,spearman,0.325,0.039,complete
 clearance_microsome_az,MiniMol,Random Forest on GNN fingerprint,regression,spearman,0.592,0.009,complete
 clearance_microsome_az,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.43,0.008,complete
 clearance_microsome_az,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,spearman,0.583,0.021,complete
 clearance_microsome_az,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,spearman,0.612,0.014,complete
-clearance_microsome_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,-,-,-,pending
-clearance_microsome_az,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
+clearance_microsome_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.469,0.023,complete
+clearance_microsome_az,BasicML,GradientBoosting,regression,spearman,0.454,0.038,complete
 ld50_zhu,MiniMol,Random Forest on GNN fingerprint,regression,mae,0.658,0.001,complete
 ld50_zhu,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,0.633,0.012,complete
 ld50_zhu,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.597,0.004,complete
 ld50_zhu,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,mae,0.661,0.026,complete
-ld50_zhu,AttentiveFP,Graph Attention Network (trains from scratch),regression,-,-,-,pending
-ld50_zhu,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
+ld50_zhu,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,0.631,0.024,complete
+ld50_zhu,BasicML,ExtraTrees,regression,mae,0.655,0.005,complete
 herg,MiniMol,Random Forest on GNN fingerprint,binary,roc-auc,0.828,0.01,complete
 herg,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.762,0.023,complete
 herg,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.869,0.004,complete
 herg,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,roc-auc,0.829,0.011,complete
-herg,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
-herg,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+herg,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.839,0.007,complete
+herg,BasicML,GradientBoosting,binary,roc-auc,0.825,0.024,complete
 ames,MiniMol,Random Forest on GNN fingerprint,binary,roc-auc,0.824,0.005,complete
 ames,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.835,0.007,complete
 ames,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.87,0.003,complete
 ames,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,roc-auc,0.851,0.005,complete
-ames,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
-ames,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+ames,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.831,0.004,complete
+ames,BasicML,XGBoost,binary,roc-auc,0.788,0.008,complete
 dili,MiniMol,Random Forest on GNN fingerprint,binary,roc-auc,0.901,0.008,complete
 dili,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.844,0.03,complete
 dili,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.934,0.005,complete
 dili,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,roc-auc,0.932,0.008,complete
-dili,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
-dili,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+dili,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.914,0.007,complete
+dili,BasicML,LogisticRegression,binary,roc-auc,0.882,0.01,complete

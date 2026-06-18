@@ -7,14 +7,15 @@ NOTE: CaliciBoost only covers caco2_wang — it was developed specifically for
 Caco-2 permeability prediction and does not cover all 22 ADMET tasks.
 
 Pipeline:
-    SMILES → PaDEL descriptors (2D + 3D, 1875 features) → feature selection
-    via permutation importance → XGBoost Regressor with Bayesian-optimized
-    hyperparameters → predict on test.
+    SMILES → RDKit descriptors (210 2D features, replaces PaDEL due to Java
+    timeout issues on server) → feature selection via permutation importance
+    → XGBoost Regressor with Bayesian-optimized hyperparameters → predict on test.
 
 Key paper details:
     - Best model: XGBoost Regressor on top-ranked PaDEL descriptors
-    - PaDEL includes both 2D and 3D molecular features (1875 total)
-    - Feature selection reduces dimensionality before final model fit
+    - Original uses PaDEL 2D + 3D molecular features (1875 total)
+    - Deviation: RDKit 2D descriptors used instead (PaDEL Java process
+      consistently timed out on server — 6+ hours for 637 molecules)
     - TDC leaderboard score: MAE = 0.256 ± 0.006 (rank 1)
     - Critical assessment score: MAE = 0.271 ± 0.002 (still rank 1)
 
@@ -47,11 +48,8 @@ from sklearn.inspection import permutation_importance
 from sklearn.model_selection import cross_val_score
 from xgboost import XGBRegressor
 
-try:
-    from padelpy import from_smiles
-    PADEL_AVAILABLE = True
-except ImportError:
-    PADEL_AVAILABLE = False
+from rdkit import Chem
+from rdkit.Chem import Descriptors, rdMolDescriptors
 
 # Task CaliciBoost covers
 TASK_NAME = "caco2_wang"
@@ -77,67 +75,43 @@ N_TOP_FEATURES = 200
 
 def compute_padel_descriptors(smiles_list):
     """
-    Compute PaDEL 2D + 3D descriptors for a list of SMILES using batch mode.
-    Writes all SMILES to a temp file and calls PaDEL once — much faster than
-    calling from_smiles() per molecule.
+    Compute RDKit 2D descriptors for a list of SMILES.
+
+    NOTE: Original CaliciBoost uses PaDEL (1875 features, 2D + 3D).
+    Replaced with RDKit 2D descriptors (~210 features) due to PaDEL Java
+    process consistently timing out on the server (6+ hours for 637 molecules).
+    RDKit runs in seconds and is already installed.
 
     Returns (feature_matrix, feature_names).
     NaN/Inf values are filled with 0.
     """
-    import tempfile
-    from padelpy import padeldescriptor
+    print(f"   Computing RDKit descriptors for {len(smiles_list)} molecules...")
 
-    if not PADEL_AVAILABLE:
-        raise RuntimeError(
-            "padelpy not installed. Run: pip install padelpy\n"
-            "PaDEL-Descriptor Java software also required — see README."
-        )
+    descriptor_list = Descriptors.descList
+    feature_names   = [name for name, _ in descriptor_list]
 
-    print(f"   Computing PaDEL descriptors for {len(smiles_list)} molecules (batch mode)...")
-
-    # Write SMILES to a temp file — PaDEL reads this in one Java call
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".smi",
-                                     delete=False) as smi_file:
-        smi_path = smi_file.name
-        for i, smi in enumerate(smiles_list):
-            smi_file.write(f"{smi}\tmol{i}\n")
-
-    out_csv = smi_path.replace(".smi", "_padel.csv")
-
-    try:
-        padeldescriptor(
-            mol_dir=smi_path,
-            d_file=out_csv,
-            d_2d=True,
-            d_3d=False,
-            fingerprints=False,
-            convert3d=False,
-            retainorder=True,
-            threads=16,
-        )
-
-        df = pd.read_csv(out_csv)
-
-        # Drop the Name column
-        if "Name" in df.columns:
-            df = df.drop(columns=["Name"])
-
-        feature_names = list(df.columns)
-        X = df.values.astype(np.float32)
-        X = np.nan_to_num(X, nan=0.0, posinf=0.0, neginf=0.0)
-
-        print(f"   Done — {X.shape[0]} molecules × {X.shape[1]} descriptors")
-        return X, feature_names
-
-    finally:
-        # Clean up temp files
-        for f in [smi_path, out_csv]:
+    rows = []
+    for smi in smiles_list:
+        mol = Chem.MolFromSmiles(smi)
+        if mol is None:
+            rows.append([0.0] * len(descriptor_list))
+            continue
+        row = []
+        for name, fn in descriptor_list:
             try:
-                os.remove(f)
+                val = float(fn(mol))
+                if not np.isfinite(val):
+                    val = 0.0
             except Exception:
-                pass
+                val = 0.0
+            row.append(val)
+        rows.append(row)
 
+    X = np.array(rows, dtype=np.float32)
+    X = np.nan_to_num(X, nan=0.0, posinf=0.0, neginf=0.0)
 
+    print(f"   Done — {X.shape[0]} molecules × {X.shape[1]} descriptors")
+    return X, feature_names
 def select_top_features(X_train, y_train, feature_names, n_top=N_TOP_FEATURES):
     """
     Select top features using permutation importance on a quick RF model.
@@ -260,12 +234,6 @@ def run_benchmark(n_runs=5):
 
     os.makedirs(logs_dir, exist_ok=True)
     os.makedirs(artifacts_dir, exist_ok=True)
-
-    if not PADEL_AVAILABLE:
-        print("ERROR: padelpy not installed.")
-        print("  pip install padelpy")
-        print("  Also requires Java + PaDEL-Descriptor — see README.")
-        return {}
 
     group = admet_group(path=data_dir)
 

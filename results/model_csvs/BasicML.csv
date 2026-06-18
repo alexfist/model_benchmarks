@@ -8,16 +8,16 @@ solubility_aqsoldb,BasicML,ExtraTrees,regression,mae,0.834,0.011,complete
 bbb_martins,BasicML,AdaBoost,binary,roc-auc,0.875,0.017,complete
 ppbr_az,BasicML,AdaBoost,regression,mae,9.037,0.276,complete
 vdss_lombardo,BasicML,GradientBoosting,regression,spearman,0.482,0.014,complete
-cyp2d6_veith,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
-cyp3a4_veith,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
-cyp2c9_veith,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
-cyp2c9_substrate_carbonmangels,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
-cyp2d6_substrate_carbonmangels,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
-cyp3a4_substrate_carbonmangels,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
-half_life_obach,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
-clearance_hepatocyte_az,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
-clearance_microsome_az,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
-ld50_zhu,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
-herg,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
-ames,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
-dili,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+cyp2d6_veith,BasicML,ExtraTrees,binary,pr-auc,0.603,0.021,complete
+cyp3a4_veith,BasicML,XGBoost,binary,pr-auc,0.801,0.003,complete
+cyp2c9_veith,BasicML,Bagging,binary,pr-auc,0.725,0.009,complete
+cyp2c9_substrate_carbonmangels,BasicML,RandomForest,binary,pr-auc,0.388,0.05,complete
+cyp2d6_substrate_carbonmangels,BasicML,AdaBoost,binary,pr-auc,0.61,0.015,complete
+cyp3a4_substrate_carbonmangels,BasicML,LogisticRegression,binary,roc-auc,0.596,0.026,complete
+half_life_obach,BasicML,AdaBoost,regression,spearman,0.193,0.03,complete
+clearance_hepatocyte_az,BasicML,XGBoost,regression,spearman,0.325,0.039,complete
+clearance_microsome_az,BasicML,GradientBoosting,regression,spearman,0.454,0.038,complete
+ld50_zhu,BasicML,ExtraTrees,regression,mae,0.655,0.005,complete
+herg,BasicML,GradientBoosting,binary,roc-auc,0.825,0.024,complete
+ames,BasicML,XGBoost,binary,roc-auc,0.788,0.008,complete
+dili,BasicML,LogisticRegression,binary,roc-auc,0.882,0.01,complete
