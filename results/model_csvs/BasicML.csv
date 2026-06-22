@@ -1,23 +1,23 @@
-benchmark,model,algorithm,task_type,leaderboard_metric,score,std,status
-caco2_wang,BasicML,ExtraTrees,regression,mae,0.353,0.083,complete
-hia_hou,BasicML,LogisticRegression,binary,roc-auc,0.922,0.006,complete
-pgp_broccatelli,BasicML,RandomForest,binary,roc-auc,0.884,0.008,complete
-bioavailability_ma,BasicML,RandomForest,binary,roc-auc,0.676,0.012,complete
-lipophilicity_astrazeneca,BasicML,XGBoost,regression,mae,0.64,0.004,complete
-solubility_aqsoldb,BasicML,ExtraTrees,regression,mae,0.834,0.011,complete
-bbb_martins,BasicML,AdaBoost,binary,roc-auc,0.875,0.017,complete
-ppbr_az,BasicML,AdaBoost,regression,mae,9.037,0.276,complete
-vdss_lombardo,BasicML,GradientBoosting,regression,spearman,0.482,0.014,complete
-cyp2d6_veith,BasicML,ExtraTrees,binary,pr-auc,0.603,0.021,complete
-cyp3a4_veith,BasicML,XGBoost,binary,pr-auc,0.801,0.003,complete
-cyp2c9_veith,BasicML,Bagging,binary,pr-auc,0.725,0.009,complete
-cyp2c9_substrate_carbonmangels,BasicML,RandomForest,binary,pr-auc,0.388,0.05,complete
-cyp2d6_substrate_carbonmangels,BasicML,AdaBoost,binary,pr-auc,0.61,0.015,complete
-cyp3a4_substrate_carbonmangels,BasicML,LogisticRegression,binary,roc-auc,0.596,0.026,complete
-half_life_obach,BasicML,AdaBoost,regression,spearman,0.193,0.03,complete
-clearance_hepatocyte_az,BasicML,XGBoost,regression,spearman,0.325,0.039,complete
-clearance_microsome_az,BasicML,GradientBoosting,regression,spearman,0.454,0.038,complete
-ld50_zhu,BasicML,ExtraTrees,regression,mae,0.655,0.005,complete
-herg,BasicML,GradientBoosting,binary,roc-auc,0.825,0.024,complete
-ames,BasicML,XGBoost,binary,roc-auc,0.788,0.008,complete
-dili,BasicML,LogisticRegression,binary,roc-auc,0.882,0.01,complete
+benchmark,model,algorithm,task_type,leaderboard_metric,score,std,best_hyperparams,status
+caco2_wang,BasicML,ExtraTrees,regression,mae,0.353,0.083,"Bagging: n_estimators=20, max_samples=1.0",complete
+hia_hou,BasicML,LogisticRegression,binary,roc-auc,0.922,0.006,"Bagging: n_estimators=20, max_samples=0.5",complete
+pgp_broccatelli,BasicML,RandomForest,binary,roc-auc,0.884,0.008,"RandomForest: n_estimators=200, max_depth=None",complete
+bioavailability_ma,BasicML,RandomForest,binary,roc-auc,0.676,0.012,"XGBoost: n_estimators=100, max_depth=7, learning_rate=0.1",complete
+lipophilicity_astrazeneca,BasicML,XGBoost,regression,mae,0.64,0.004,"Bagging: n_estimators=50, max_samples=1.0",complete
+solubility_aqsoldb,BasicML,ExtraTrees,regression,mae,0.834,0.011,"XGBoost: n_estimators=100, max_depth=5, learning_rate=0.1",complete
+bbb_martins,BasicML,AdaBoost,binary,roc-auc,0.875,0.017,"XGBoost: n_estimators=100, max_depth=5, learning_rate=0.1",complete
+ppbr_az,BasicML,AdaBoost,regression,mae,9.037,0.276,"Bagging: n_estimators=20, max_samples=0.5",complete
+vdss_lombardo,BasicML,GradientBoosting,regression,spearman,0.482,0.014,"AdaBoost: n_estimators=100, learning_rate=0.01",complete
+cyp2d6_veith,BasicML,ExtraTrees,binary,pr-auc,0.603,0.021,"XGBoost: n_estimators=200, max_depth=7, learning_rate=0.05",complete
+cyp3a4_veith,BasicML,XGBoost,binary,pr-auc,0.801,0.003,"GradientBoosting: n_estimators=100, max_depth=5, learning_rate=0.1",complete
+cyp2c9_veith,BasicML,Bagging,binary,pr-auc,0.725,0.009,"XGBoost: n_estimators=200, max_depth=7, learning_rate=0.05",complete
+cyp2c9_substrate_carbonmangels,BasicML,RandomForest,binary,pr-auc,0.388,0.05,"GradientBoosting: n_estimators=100, max_depth=5, learning_rate=0.1",complete
+cyp2d6_substrate_carbonmangels,BasicML,AdaBoost,binary,pr-auc,0.61,0.015,LogisticRegression: C=100,complete
+cyp3a4_substrate_carbonmangels,BasicML,LogisticRegression,binary,roc-auc,0.596,0.026,"XGBoost: n_estimators=100, max_depth=5, learning_rate=0.1",complete
+half_life_obach,BasicML,AdaBoost,regression,spearman,0.193,0.03,"Bagging: n_estimators=10, max_samples=0.5",complete
+clearance_hepatocyte_az,BasicML,XGBoost,regression,spearman,0.325,0.039,"ExtraTrees: n_estimators=200, max_depth=10",complete
+clearance_microsome_az,BasicML,GradientBoosting,regression,spearman,0.454,0.038,"Bagging: n_estimators=50, max_samples=1.0",complete
+ld50_zhu,BasicML,ExtraTrees,regression,mae,0.655,0.005,"ExtraTrees: n_estimators=200, max_depth=None",complete
+herg,BasicML,GradientBoosting,binary,roc-auc,0.825,0.024,"ExtraTrees: n_estimators=200, max_depth=10",complete
+ames,BasicML,XGBoost,binary,roc-auc,0.788,0.008,"XGBoost: n_estimators=200, max_depth=7, learning_rate=0.05",complete
+dili,BasicML,LogisticRegression,binary,roc-auc,0.882,0.01,"RandomForest: n_estimators=200, max_depth=None",complete

@@ -1,23 +1,23 @@
-benchmark,model,algorithm,task_type,leaderboard_metric,score,std,status
-caco2_wang,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.295,0.004,complete
-hia_hou,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.988,0.002,complete
-pgp_broccatelli,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.934,0.001,complete
-bioavailability_ma,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.726,0.005,complete
-lipophilicity_astrazeneca,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.471,0.003,complete
-solubility_aqsoldb,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.861,0.01,complete
-bbb_martins,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.894,0.002,complete
-ppbr_az,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,7.528,0.046,complete
-vdss_lombardo,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,spearman,0.544,0.013,complete
-cyp2d6_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.782,0.007,complete
-cyp3a4_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.916,0.001,complete
-cyp2c9_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.861,0.004,complete
-cyp2c9_substrate_carbonmangels,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.43,0.015,complete
-cyp2d6_substrate_carbonmangels,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.717,0.006,complete
-cyp3a4_substrate_carbonmangels,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.641,0.009,complete
-half_life_obach,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,spearman,0.34,0.027,complete
-clearance_hepatocyte_az,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,spearman,0.513,0.019,complete
-clearance_microsome_az,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,spearman,0.583,0.021,complete
-ld50_zhu,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.597,0.004,complete
-herg,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.869,0.004,complete
-ames,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.87,0.003,complete
-dili,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.934,0.005,complete
+benchmark,model,algorithm,task_type,leaderboard_metric,score,std,best_hyperparams,status
+caco2_wang,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.295,0.004,"iterations=500, learning_rate=0.1",complete
+hia_hou,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.988,0.002,"iterations=1000, learning_rate=0.03",complete
+pgp_broccatelli,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.934,0.001,"iterations=1000, learning_rate=0.03",complete
+bioavailability_ma,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.726,0.005,"iterations=1000, learning_rate=0.03",complete
+lipophilicity_astrazeneca,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.471,0.003,"iterations=2000, learning_rate=0.03",complete
+solubility_aqsoldb,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.861,0.01,"iterations=1000, learning_rate=0.03",complete
+bbb_martins,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.894,0.002,"iterations=1000, learning_rate=0.1",complete
+ppbr_az,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,7.528,0.046,"iterations=1000, learning_rate=0.03",complete
+vdss_lombardo,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,spearman,0.544,0.013,"iterations=1000, learning_rate=0.03",complete
+cyp2d6_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.782,0.007,"iterations=1000, learning_rate=0.03",complete
+cyp3a4_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.916,0.001,"iterations=2000, learning_rate=0.03",complete
+cyp2c9_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.861,0.004,"iterations=2000, learning_rate=0.03",complete
+cyp2c9_substrate_carbonmangels,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.43,0.015,"iterations=500, learning_rate=0.1",complete
+cyp2d6_substrate_carbonmangels,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.717,0.006,"iterations=1000, learning_rate=0.1",complete
+cyp3a4_substrate_carbonmangels,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.641,0.009,"iterations=2000, learning_rate=0.03",complete
+half_life_obach,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,spearman,0.34,0.027,"iterations=1000, learning_rate=0.03",complete
+clearance_hepatocyte_az,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,spearman,0.513,0.019,"iterations=1000, learning_rate=0.1",complete
+clearance_microsome_az,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,spearman,0.583,0.021,"iterations=1000, learning_rate=0.1",complete
+ld50_zhu,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.597,0.004,"iterations=1000, learning_rate=0.1",complete
+herg,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.869,0.004,"iterations=1000, learning_rate=0.03",complete
+ames,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.87,0.003,"iterations=2000, learning_rate=0.03",complete
+dili,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.934,0.005,"iterations=1000, learning_rate=0.03",complete

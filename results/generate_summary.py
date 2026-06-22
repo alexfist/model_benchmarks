@@ -220,6 +220,44 @@ TDC_LEADERBOARD = [
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
+def _load_best_hyperparams(logs_dir, model_name, task):
+    """
+    Pull the best hyperparameter combo for a given model+task.
+    Priority:
+      1. <model>/logs/<task>_tuning.json  → "best_params" field
+      2. <model>/artifacts/<task>/hyperparams.json → "params" field
+    Returns a compact string, or "-" if nothing found.
+    """
+    tuning_path = os.path.join(logs_dir, model_name, "logs", f"{task}_tuning.json")
+    if os.path.exists(tuning_path):
+        try:
+            with open(tuning_path) as f:
+                tuning = json.load(f)
+            best = tuning.get("best_params")
+            if best:
+                # BasicML/CaliciBoost-style: also carries a "best_model" / "best_combo" label
+                label = tuning.get("best_model") or tuning.get("best_combo")
+                parts = ", ".join(f"{k}={v}" for k, v in best.items())
+                return f"{label}: {parts}" if label else parts
+        except Exception:
+            pass
+
+    artifact_path = os.path.join(logs_dir, model_name, "artifacts", task, "hyperparams.json")
+    if os.path.exists(artifact_path):
+        try:
+            with open(artifact_path) as f:
+                hp = json.load(f)
+            params = hp.get("params")
+            if params:
+                algo = hp.get("algorithm")
+                parts = ", ".join(f"{k}={v}" for k, v in params.items())
+                return f"{algo}: {parts}" if algo else parts
+        except Exception:
+            pass
+
+    return "-"
+
+
 def load_all_results(logs_dir):
     records = {}
     for model_name in MODELS:
@@ -242,10 +280,11 @@ def load_all_results(logs_dir):
             if task not in records:
                 records[task] = {}
             records[task][model_name] = {
-                "score_mean": result.get("score_mean"),
-                "score_std":  result.get("score_std"),
-                "metric":     result.get("metric", ""),
-                "algorithm":  result.get("algorithm", MODEL_ALGORITHM.get(model_name, "-")),
+                "score_mean":      result.get("score_mean"),
+                "score_std":       result.get("score_std"),
+                "metric":          result.get("metric", ""),
+                "algorithm":       result.get("algorithm", MODEL_ALGORITHM.get(model_name, "-")),
+                "best_hyperparams": _load_best_hyperparams(logs_dir, model_name, task),
             }
     return records
 
@@ -326,7 +365,7 @@ def add_model_sheet(wb, model_name, records):
         start_row = 1
 
     headers = ["benchmark", "model", "algorithm", "task_type",
-               "leaderboard_metric", "score", "std"]
+               "leaderboard_metric", "score", "std", "best_hyperparams"]
     ws.append(headers)
     style_header(ws, ws.max_row, len(headers))
 
@@ -339,25 +378,27 @@ def add_model_sheet(wb, model_name, records):
             ws.append([task, model_name,
                        MODEL_ALGORITHM.get(model_name, "-"),
                        TASK_TYPE.get(task, "-"),
-                       "N/A", "N/A", "N/A"])
+                       "N/A", "N/A", "N/A", "N/A"])
             style_row(ws, ws.max_row, len(headers),
                       bg_color="F2F2F2" if i % 2 == 0 else "E0E0E0")
             continue
 
         task_data = records.get(task, {}).get(model_name)
         if task_data and task_data.get("score_mean") is not None:
-            score     = round(task_data["score_mean"], 4)
-            std       = round(task_data["score_std"],  4)
-            metric    = task_data["metric"]
-            algorithm = task_data.get("algorithm", MODEL_ALGORITHM.get(model_name, "-"))
+            score       = round(task_data["score_mean"], 4)
+            std         = round(task_data["score_std"],  4)
+            metric      = task_data["metric"]
+            algorithm   = task_data.get("algorithm", MODEL_ALGORITHM.get(model_name, "-"))
+            hyperparams = task_data.get("best_hyperparams", "-")
         else:
-            score     = "pending" if model_name not in BLOCKED_MODELS else "-"
-            std       = "-"
-            metric    = "-"
-            algorithm = MODEL_ALGORITHM.get(model_name, "-")
+            score       = "pending" if model_name not in BLOCKED_MODELS else "-"
+            std         = "-"
+            metric      = "-"
+            algorithm   = MODEL_ALGORITHM.get(model_name, "-")
+            hyperparams = "-"
 
         task_type = TASK_TYPE.get(task, "-")
-        ws.append([task, model_name, algorithm, task_type, metric, score, std])
+        ws.append([task, model_name, algorithm, task_type, metric, score, std, hyperparams])
         bg = "D9E1F2" if i % 2 == 0 else None
         style_row(ws, ws.max_row, len(headers), bg_color=bg)
 
@@ -368,6 +409,7 @@ def add_model_sheet(wb, model_name, records):
     ws.column_dimensions["E"].width = 18
     ws.column_dimensions["F"].width = 10
     ws.column_dimensions["G"].width = 8
+    ws.column_dimensions["H"].width = 45
 
 
 # ── CSV comparison ────────────────────────────────────────────────────────────
@@ -388,10 +430,11 @@ def generate_csv(records, output_dir):
                 metric = task_records[model]["metric"]
                 break
 
-        best_score = None
-        best_model = None
-        best_std   = None
-        best_algo  = None
+        best_score  = None
+        best_model  = None
+        best_std    = None
+        best_algo   = None
+        best_params = None
 
         for model in runnable_models:
             # Skip if model doesn't cover this task
@@ -410,12 +453,13 @@ def generate_csv(records, output_dir):
                 (not lower_is_better and mean > best_score)
             )
             if is_better:
-                best_score = mean
-                best_model = model
-                best_std   = std
-                best_algo  = task_records[model].get(
+                best_score  = mean
+                best_model  = model
+                best_std    = std
+                best_algo   = task_records[model].get(
                     "algorithm", MODEL_ALGORITHM.get(model, "-")
                 )
+                best_params = task_records[model].get("best_hyperparams", "-")
 
         rows.append({
             "benchmark":          task,
@@ -425,6 +469,7 @@ def generate_csv(records, output_dir):
             "leaderboard_metric": metric,
             "score":              round(best_score, 4) if best_score is not None else "-",
             "std":                round(best_std,   4) if best_std   is not None else "-",
+            "best_hyperparams":   best_params if best_params else "-",
         })
 
     df = pd.DataFrame(rows)
@@ -456,17 +501,19 @@ def generate_all_results_csv(records, output_dir):
 
             task_data = task_records.get(model)
             if task_data and task_data.get("score_mean") is not None:
-                score     = round(task_data["score_mean"], 4)
-                std       = round(task_data["score_std"],  4)
-                metric    = task_data["metric"]
-                algorithm = task_data.get("algorithm", MODEL_ALGORITHM.get(model, "-"))
-                status    = "complete"
+                score      = round(task_data["score_mean"], 4)
+                std        = round(task_data["score_std"],  4)
+                metric     = task_data["metric"]
+                algorithm  = task_data.get("algorithm", MODEL_ALGORITHM.get(model, "-"))
+                status     = "complete"
+                hyperparams = task_data.get("best_hyperparams", "-")
             else:
-                score     = "-"
-                std       = "-"
-                metric    = "-"
-                algorithm = MODEL_ALGORITHM.get(model, "-")
-                status    = "pending"
+                score      = "-"
+                std        = "-"
+                metric     = "-"
+                algorithm  = MODEL_ALGORITHM.get(model, "-")
+                status     = "pending"
+                hyperparams = "-"
 
             rows.append({
                 "benchmark":          task,
@@ -476,6 +523,7 @@ def generate_all_results_csv(records, output_dir):
                 "leaderboard_metric": metric,
                 "score":              score,
                 "std":                std,
+                "best_hyperparams":   hyperparams,
                 "status":             status,
             })
 
@@ -507,17 +555,19 @@ def generate_model_csvs(records, output_dir):
 
             task_data = records.get(task, {}).get(model)
             if task_data and task_data.get("score_mean") is not None:
-                score     = round(task_data["score_mean"], 4)
-                std       = round(task_data["score_std"],  4)
-                metric    = task_data["metric"]
-                algorithm = task_data.get("algorithm", MODEL_ALGORITHM.get(model, "-"))
-                status    = "complete"
+                score      = round(task_data["score_mean"], 4)
+                std        = round(task_data["score_std"],  4)
+                metric     = task_data["metric"]
+                algorithm  = task_data.get("algorithm", MODEL_ALGORITHM.get(model, "-"))
+                status     = "complete"
+                hyperparams = task_data.get("best_hyperparams", "-")
             else:
-                score     = "-"
-                std       = "-"
-                metric    = "-"
-                algorithm = MODEL_ALGORITHM.get(model, "-")
-                status    = "pending"
+                score      = "-"
+                std        = "-"
+                metric     = "-"
+                algorithm  = MODEL_ALGORITHM.get(model, "-")
+                status     = "pending"
+                hyperparams = "-"
 
             rows.append({
                 "benchmark":          task,
@@ -527,6 +577,7 @@ def generate_model_csvs(records, output_dir):
                 "leaderboard_metric": metric,
                 "score":              score,
                 "std":                std,
+                "best_hyperparams":   hyperparams,
                 "status":             status,
             })
 
@@ -545,6 +596,7 @@ def generate_model_csvs(records, output_dir):
             "leaderboard_metric": "-",
             "score":              "-",
             "std":                "-",
+            "best_hyperparams":   "-",
             "status":             "could_not_run",
         }])
         out_path = os.path.join(csv_dir, f"{model}.csv")

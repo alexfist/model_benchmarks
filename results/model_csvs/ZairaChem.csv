@@ -1,2 +1,2 @@
-benchmark,model,algorithm,task_type,leaderboard_metric,score,std,status
--,ZairaChem,Ensemble (XGBoost/LightGBM/RF/NN on Ersilia descriptors),-,-,-,-,could_not_run
+benchmark,model,algorithm,task_type,leaderboard_metric,score,std,best_hyperparams,status
+-,ZairaChem,Ensemble (XGBoost/LightGBM/RF/NN on Ersilia descriptors),-,-,-,-,-,could_not_run

@@ -1,23 +1,23 @@
-benchmark,model,algorithm,task_type,leaderboard_metric,score,std,status
-caco2_wang,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,0.346,0.006,complete
-hia_hou,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.985,0.002,complete
-pgp_broccatelli,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.906,0.003,complete
-bioavailability_ma,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.681,0.025,complete
-lipophilicity_astrazeneca,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,0.517,0.017,complete
-solubility_aqsoldb,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,0.766,0.021,complete
-bbb_martins,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.902,0.004,complete
-ppbr_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,8.612,0.654,complete
-vdss_lombardo,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.302,0.172,complete
-cyp2d6_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.67,0.008,complete
-cyp3a4_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.855,0.003,complete
-cyp2c9_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.764,0.015,complete
-cyp2c9_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.482,0.007,complete
-cyp2d6_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.589,0.025,complete
-cyp3a4_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.598,0.011,complete
-half_life_obach,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.06,0.039,complete
-clearance_hepatocyte_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.259,0.039,complete
-clearance_microsome_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.469,0.023,complete
-ld50_zhu,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,0.631,0.024,complete
-herg,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.839,0.007,complete
-ames,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.831,0.004,complete
-dili,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.914,0.007,complete
+benchmark,model,algorithm,task_type,leaderboard_metric,score,std,best_hyperparams,status
+caco2_wang,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,0.346,0.006,"lr=0.0005, epochs=50",complete
+hia_hou,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.985,0.002,"lr=0.0005, epochs=50",complete
+pgp_broccatelli,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.906,0.003,"lr=0.0005, epochs=50",complete
+bioavailability_ma,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.681,0.025,"lr=0.0005, epochs=50",complete
+lipophilicity_astrazeneca,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,0.517,0.017,"lr=0.0005, epochs=50",complete
+solubility_aqsoldb,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,0.766,0.021,"lr=0.001, epochs=20",complete
+bbb_martins,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.902,0.004,"lr=0.0005, epochs=50",complete
+ppbr_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,8.612,0.654,"lr=0.0005, epochs=50",complete
+vdss_lombardo,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.302,0.172,"lr=0.0001, epochs=30",complete
+cyp2d6_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.67,0.008,"lr=0.0005, epochs=50",complete
+cyp3a4_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.855,0.003,"lr=0.0005, epochs=50",complete
+cyp2c9_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.764,0.015,"lr=0.0005, epochs=50",complete
+cyp2c9_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.482,0.007,"lr=0.0005, epochs=50",complete
+cyp2d6_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.589,0.025,"lr=0.0005, epochs=50",complete
+cyp3a4_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.598,0.011,"lr=0.0005, epochs=50",complete
+half_life_obach,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.06,0.039,"lr=0.0005, epochs=50",complete
+clearance_hepatocyte_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.259,0.039,"lr=0.0005, epochs=50",complete
+clearance_microsome_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.469,0.023,"lr=0.0005, epochs=50",complete
+ld50_zhu,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,0.631,0.024,"lr=0.0005, epochs=50",complete
+herg,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.839,0.007,"lr=0.001, epochs=20",complete
+ames,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.831,0.004,"lr=0.0005, epochs=50",complete
+dili,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.914,0.007,"lr=0.0005, epochs=50",complete

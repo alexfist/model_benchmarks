@@ -1,2 +1,2 @@
-benchmark,model,algorithm,task_type,leaderboard_metric,score,std,status
-caco2_wang,CaliciBoost,XGBoost on top-ranked PaDEL descriptors (Caco-2 only),regression,mae,0.269,0.004,complete
+benchmark,model,algorithm,task_type,leaderboard_metric,score,std,best_hyperparams,status
+caco2_wang,CaliciBoost,XGBoost on top-ranked PaDEL descriptors (Caco-2 only),regression,mae,0.269,0.004,"n_estimators=1000, learning_rate=0.03, max_depth=6, subsample=0.8, colsample_bytree=0.8, min_child_weight=3, reg_alpha=0.1, reg_lambda=1.0, random_state=42, verbosity=0",complete

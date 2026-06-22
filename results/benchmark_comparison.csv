@@ -1,23 +1,23 @@
-benchmark,best_model,algorithm,task_type,leaderboard_metric,score,std
-caco2_wang,CaliciBoost,XGBoost on top-ranked PaDEL descriptors (Caco-2 only),regression,mae,0.269,0.004
-hia_hou,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.988,0.002
-pgp_broccatelli,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,roc-auc,0.935,0.005
-bioavailability_ma,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.726,0.005
-lipophilicity_astrazeneca,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.471,0.003
-solubility_aqsoldb,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,0.766,0.021
-bbb_martins,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,roc-auc,0.911,0.006
-ppbr_az,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,7.528,0.046
-vdss_lombardo,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,spearman,0.554,0.013
-cyp2d6_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.782,0.007
-cyp3a4_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.916,0.001
-cyp2c9_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.861,0.004
-cyp2c9_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.482,0.007
-cyp2d6_substrate_carbonmangels,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,pr-auc,0.738,0.016
-cyp3a4_substrate_carbonmangels,MiniMol,Random Forest on GNN fingerprint,binary,roc-auc,0.649,0.01
-half_life_obach,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.06,0.039
-clearance_hepatocyte_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.259,0.039
-clearance_microsome_az,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.43,0.008
-ld50_zhu,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.597,0.004
-herg,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.869,0.004
-ames,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.87,0.003
-dili,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.934,0.005
+benchmark,best_model,algorithm,task_type,leaderboard_metric,score,std,best_hyperparams
+caco2_wang,CaliciBoost,XGBoost on top-ranked PaDEL descriptors (Caco-2 only),regression,mae,0.269,0.004,"n_estimators=1000, learning_rate=0.03, max_depth=6, subsample=0.8, colsample_bytree=0.8, min_child_weight=3, reg_alpha=0.1, reg_lambda=1.0, random_state=42, verbosity=0"
+hia_hou,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.988,0.002,"iterations=1000, learning_rate=0.03"
+pgp_broccatelli,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,roc-auc,0.935,0.005,"lr=0.001, epochs=20"
+bioavailability_ma,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.726,0.005,"iterations=1000, learning_rate=0.03"
+lipophilicity_astrazeneca,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.471,0.003,"iterations=2000, learning_rate=0.03"
+solubility_aqsoldb,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,0.766,0.021,"lr=0.001, epochs=20"
+bbb_martins,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,roc-auc,0.911,0.006,"lr=0.001, epochs=20"
+ppbr_az,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,7.528,0.046,"iterations=1000, learning_rate=0.03"
+vdss_lombardo,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,spearman,0.554,0.013,"lr=0.001, epochs=20"
+cyp2d6_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.782,0.007,"iterations=1000, learning_rate=0.03"
+cyp3a4_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.916,0.001,"iterations=2000, learning_rate=0.03"
+cyp2c9_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.861,0.004,"iterations=2000, learning_rate=0.03"
+cyp2c9_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.482,0.007,"lr=0.0005, epochs=50"
+cyp2d6_substrate_carbonmangels,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,pr-auc,0.738,0.016,"lr=0.001, epochs=20"
+cyp3a4_substrate_carbonmangels,MiniMol,Random Forest on GNN fingerprint,binary,roc-auc,0.649,0.01,"n_estimators=100, max_depth=None"
+half_life_obach,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.06,0.039,"lr=0.0005, epochs=50"
+clearance_hepatocyte_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.259,0.039,"lr=0.0005, epochs=50"
+clearance_microsome_az,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.43,0.008,-
+ld50_zhu,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.597,0.004,"iterations=1000, learning_rate=0.1"
+herg,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.869,0.004,"iterations=1000, learning_rate=0.03"
+ames,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.87,0.003,"iterations=2000, learning_rate=0.03"
+dili,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.934,0.005,"iterations=1000, learning_rate=0.03"
