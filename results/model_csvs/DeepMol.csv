@@ -1,23 +1,23 @@
 benchmark,model,algorithm,task_type,leaderboard_metric,score,std,best_hyperparams,status
-caco2_wang,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,0.421,0.026,-,complete
-hia_hou,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.942,0.013,-,complete
-pgp_broccatelli,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.915,0.009,-,complete
-bioavailability_ma,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.65,0.031,-,complete
-lipophilicity_astrazeneca,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,0.704,0.012,-,complete
-solubility_aqsoldb,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,1.275,0.011,-,complete
-bbb_martins,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.867,0.006,-,complete
-ppbr_az,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,9.943,0.063,-,complete
-vdss_lombardo,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.475,0.03,-,complete
-cyp2d6_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.63,0.026,-,complete
-cyp3a4_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.835,0.007,-,complete
-cyp2c9_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.733,0.003,-,complete
-cyp2c9_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.377,0.016,-,complete
-cyp2d6_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.649,0.023,-,complete
-cyp3a4_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.634,0.01,-,complete
-half_life_obach,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.399,0.051,-,complete
-clearance_hepatocyte_az,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.273,0.009,-,complete
-clearance_microsome_az,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.43,0.008,-,complete
-ld50_zhu,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,0.633,0.012,-,complete
-herg,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.762,0.023,-,complete
-ames,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.835,0.007,-,complete
-dili,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.844,0.03,-,complete
+caco2_wang,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,0.421,0.026,combo selected: morgan_1024+xgb (no hyperparams tuned),complete
+hia_hou,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.942,0.013,combo selected: morgan_2048+rf_100 (no hyperparams tuned),complete
+pgp_broccatelli,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.915,0.009,combo selected: morgan_2048+rf_200 (no hyperparams tuned),complete
+bioavailability_ma,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.65,0.031,combo selected: morgan_2048+rf_100 (no hyperparams tuned),complete
+lipophilicity_astrazeneca,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,0.704,0.012,combo selected: morgan_2048+xgb (no hyperparams tuned),complete
+solubility_aqsoldb,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,1.275,0.011,combo selected: morgan_2048+xgb (no hyperparams tuned),complete
+bbb_martins,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.867,0.006,combo selected: morgan_1024+rf_100 (no hyperparams tuned),complete
+ppbr_az,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,9.943,0.063,combo selected: morgan_1024+xgb (no hyperparams tuned),complete
+vdss_lombardo,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.475,0.03,combo selected: morgan_2048+xgb (no hyperparams tuned),complete
+cyp2d6_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.63,0.026,combo selected: morgan_2048+xgb (no hyperparams tuned),complete
+cyp3a4_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.835,0.007,combo selected: morgan_2048+rf_200 (no hyperparams tuned),complete
+cyp2c9_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.733,0.003,combo selected: morgan_2048+rf_200 (no hyperparams tuned),complete
+cyp2c9_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.377,0.016,combo selected: morgan_1024+xgb (no hyperparams tuned),complete
+cyp2d6_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.649,0.023,combo selected: morgan_2048+xgb (no hyperparams tuned),complete
+cyp3a4_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.634,0.01,combo selected: morgan_1024+rf_100 (no hyperparams tuned),complete
+half_life_obach,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.399,0.051,combo selected: morgan_1024+rf_200 (no hyperparams tuned),complete
+clearance_hepatocyte_az,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.273,0.009,combo selected: morgan_2048+rf_100 (no hyperparams tuned),complete
+clearance_microsome_az,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.43,0.008,combo selected: morgan_2048+rf_200 (no hyperparams tuned),complete
+ld50_zhu,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,0.633,0.012,combo selected: morgan_2048+rf_200 (no hyperparams tuned),complete
+herg,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.762,0.023,combo selected: morgan_2048+xgb (no hyperparams tuned),complete
+ames,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.835,0.007,combo selected: morgan_2048+xgb (no hyperparams tuned),complete
+dili,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.844,0.03,combo selected: morgan_2048+rf_200 (no hyperparams tuned),complete

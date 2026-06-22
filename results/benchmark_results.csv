@@ -1,133 +1,133 @@
 benchmark,model,algorithm,task_type,leaderboard_metric,score,std,best_hyperparams,status
 caco2_wang,MiniMol,Random Forest on GNN fingerprint,regression,mae,0.435,0.011,"n_estimators=50, max_depth=None",complete
-caco2_wang,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,0.421,0.026,-,complete
+caco2_wang,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,0.421,0.026,combo selected: morgan_1024+xgb (no hyperparams tuned),complete
 caco2_wang,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.295,0.004,"iterations=500, learning_rate=0.1",complete
 caco2_wang,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,mae,0.422,0.032,"lr=0.001, epochs=20",complete
 caco2_wang,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,0.346,0.006,"lr=0.0005, epochs=50",complete
 caco2_wang,BasicML,ExtraTrees,regression,mae,0.353,0.083,"Bagging: n_estimators=20, max_samples=1.0",complete
 caco2_wang,CaliciBoost,XGBoost on top-ranked PaDEL descriptors (Caco-2 only),regression,mae,0.269,0.004,"n_estimators=1000, learning_rate=0.03, max_depth=6, subsample=0.8, colsample_bytree=0.8, min_child_weight=3, reg_alpha=0.1, reg_lambda=1.0, random_state=42, verbosity=0",complete
 hia_hou,MiniMol,Random Forest on GNN fingerprint,binary,roc-auc,0.945,0.007,"n_estimators=200, max_depth=None",complete
-hia_hou,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.942,0.013,-,complete
+hia_hou,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.942,0.013,combo selected: morgan_2048+rf_100 (no hyperparams tuned),complete
 hia_hou,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.988,0.002,"iterations=1000, learning_rate=0.03",complete
 hia_hou,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,roc-auc,0.987,0.002,"lr=0.001, epochs=20",complete
 hia_hou,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.985,0.002,"lr=0.0005, epochs=50",complete
 hia_hou,BasicML,LogisticRegression,binary,roc-auc,0.922,0.006,"Bagging: n_estimators=20, max_samples=0.5",complete
 pgp_broccatelli,MiniMol,Random Forest on GNN fingerprint,binary,roc-auc,0.931,0.005,"n_estimators=200, max_depth=10",complete
-pgp_broccatelli,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.915,0.009,-,complete
+pgp_broccatelli,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.915,0.009,combo selected: morgan_2048+rf_200 (no hyperparams tuned),complete
 pgp_broccatelli,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.934,0.001,"iterations=1000, learning_rate=0.03",complete
 pgp_broccatelli,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,roc-auc,0.935,0.005,"lr=0.001, epochs=20",complete
 pgp_broccatelli,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.906,0.003,"lr=0.0005, epochs=50",complete
 pgp_broccatelli,BasicML,RandomForest,binary,roc-auc,0.884,0.008,"RandomForest: n_estimators=200, max_depth=None",complete
 bioavailability_ma,MiniMol,Random Forest on GNN fingerprint,binary,roc-auc,0.718,0.025,"n_estimators=200, max_depth=10",complete
-bioavailability_ma,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.65,0.031,-,complete
+bioavailability_ma,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.65,0.031,combo selected: morgan_2048+rf_100 (no hyperparams tuned),complete
 bioavailability_ma,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.726,0.005,"iterations=1000, learning_rate=0.03",complete
 bioavailability_ma,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,roc-auc,0.709,0.027,"lr=0.001, epochs=20",complete
 bioavailability_ma,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.681,0.025,"lr=0.0005, epochs=50",complete
 bioavailability_ma,BasicML,RandomForest,binary,roc-auc,0.676,0.012,"XGBoost: n_estimators=100, max_depth=7, learning_rate=0.1",complete
 lipophilicity_astrazeneca,MiniMol,Random Forest on GNN fingerprint,regression,mae,0.627,0.002,"n_estimators=200, max_depth=None",complete
-lipophilicity_astrazeneca,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,0.704,0.012,-,complete
+lipophilicity_astrazeneca,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,0.704,0.012,combo selected: morgan_2048+xgb (no hyperparams tuned),complete
 lipophilicity_astrazeneca,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.471,0.003,"iterations=2000, learning_rate=0.03",complete
 lipophilicity_astrazeneca,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,mae,0.538,0.009,"lr=0.001, epochs=20",complete
 lipophilicity_astrazeneca,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,0.517,0.017,"lr=0.0005, epochs=50",complete
 lipophilicity_astrazeneca,BasicML,XGBoost,regression,mae,0.64,0.004,"Bagging: n_estimators=50, max_samples=1.0",complete
 solubility_aqsoldb,MiniMol,Random Forest on GNN fingerprint,regression,mae,0.91,0.004,"n_estimators=200, max_depth=None",complete
-solubility_aqsoldb,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,1.275,0.011,-,complete
+solubility_aqsoldb,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,1.275,0.011,combo selected: morgan_2048+xgb (no hyperparams tuned),complete
 solubility_aqsoldb,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.861,0.01,"iterations=1000, learning_rate=0.03",complete
 solubility_aqsoldb,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,mae,1.002,0.024,"lr=0.0001, epochs=30",complete
 solubility_aqsoldb,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,0.766,0.021,"lr=0.001, epochs=20",complete
 solubility_aqsoldb,BasicML,ExtraTrees,regression,mae,0.834,0.011,"XGBoost: n_estimators=100, max_depth=5, learning_rate=0.1",complete
 bbb_martins,MiniMol,Random Forest on GNN fingerprint,binary,roc-auc,0.89,0.009,"n_estimators=50, max_depth=None",complete
-bbb_martins,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.867,0.006,-,complete
+bbb_martins,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.867,0.006,combo selected: morgan_1024+rf_100 (no hyperparams tuned),complete
 bbb_martins,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.894,0.002,"iterations=1000, learning_rate=0.1",complete
 bbb_martins,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,roc-auc,0.911,0.006,"lr=0.001, epochs=20",complete
 bbb_martins,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.902,0.004,"lr=0.0005, epochs=50",complete
 bbb_martins,BasicML,AdaBoost,binary,roc-auc,0.875,0.017,"XGBoost: n_estimators=100, max_depth=5, learning_rate=0.1",complete
 ppbr_az,MiniMol,Random Forest on GNN fingerprint,regression,mae,8.797,0.069,"n_estimators=100, max_depth=None",complete
-ppbr_az,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,9.943,0.063,-,complete
+ppbr_az,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,9.943,0.063,combo selected: morgan_1024+xgb (no hyperparams tuned),complete
 ppbr_az,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,7.528,0.046,"iterations=1000, learning_rate=0.03",complete
 ppbr_az,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,mae,9.062,0.239,"lr=0.001, epochs=20",complete
 ppbr_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,8.612,0.654,"lr=0.0005, epochs=50",complete
 ppbr_az,BasicML,AdaBoost,regression,mae,9.037,0.276,"Bagging: n_estimators=20, max_samples=0.5",complete
 vdss_lombardo,MiniMol,Random Forest on GNN fingerprint,regression,spearman,0.454,0.031,"n_estimators=200, max_depth=10",complete
-vdss_lombardo,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.475,0.03,-,complete
+vdss_lombardo,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.475,0.03,combo selected: morgan_2048+xgb (no hyperparams tuned),complete
 vdss_lombardo,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,spearman,0.544,0.013,"iterations=1000, learning_rate=0.03",complete
 vdss_lombardo,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,spearman,0.554,0.013,"lr=0.001, epochs=20",complete
 vdss_lombardo,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.302,0.172,"lr=0.0001, epochs=30",complete
 vdss_lombardo,BasicML,GradientBoosting,regression,spearman,0.482,0.014,"AdaBoost: n_estimators=100, learning_rate=0.01",complete
 cyp2d6_veith,MiniMol,Random Forest on GNN fingerprint,binary,pr-auc,0.663,0.004,"n_estimators=200, max_depth=10",complete
-cyp2d6_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.63,0.026,-,complete
+cyp2d6_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.63,0.026,combo selected: morgan_2048+xgb (no hyperparams tuned),complete
 cyp2d6_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.782,0.007,"iterations=1000, learning_rate=0.03",complete
 cyp2d6_veith,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,pr-auc,0.754,0.001,"lr=0.0001, epochs=30",complete
 cyp2d6_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.67,0.008,"lr=0.0005, epochs=50",complete
 cyp2d6_veith,BasicML,ExtraTrees,binary,pr-auc,0.603,0.021,"XGBoost: n_estimators=200, max_depth=7, learning_rate=0.05",complete
 cyp3a4_veith,MiniMol,Random Forest on GNN fingerprint,binary,pr-auc,0.858,0.001,"n_estimators=200, max_depth=None",complete
-cyp3a4_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.835,0.007,-,complete
+cyp3a4_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.835,0.007,combo selected: morgan_2048+rf_200 (no hyperparams tuned),complete
 cyp3a4_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.916,0.001,"iterations=2000, learning_rate=0.03",complete
 cyp3a4_veith,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,pr-auc,0.911,0.001,"lr=0.0001, epochs=30",complete
 cyp3a4_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.855,0.003,"lr=0.0005, epochs=50",complete
 cyp3a4_veith,BasicML,XGBoost,binary,pr-auc,0.801,0.003,"GradientBoosting: n_estimators=100, max_depth=5, learning_rate=0.1",complete
 cyp2c9_veith,MiniMol,Random Forest on GNN fingerprint,binary,pr-auc,0.779,0.002,"n_estimators=200, max_depth=None",complete
-cyp2c9_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.733,0.003,-,complete
+cyp2c9_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.733,0.003,combo selected: morgan_2048+rf_200 (no hyperparams tuned),complete
 cyp2c9_veith,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.861,0.004,"iterations=2000, learning_rate=0.03",complete
 cyp2c9_veith,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,pr-auc,0.84,0.002,"lr=0.0001, epochs=30",complete
 cyp2c9_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.764,0.015,"lr=0.0005, epochs=50",complete
 cyp2c9_veith,BasicML,Bagging,binary,pr-auc,0.725,0.009,"XGBoost: n_estimators=200, max_depth=7, learning_rate=0.05",complete
 cyp2c9_substrate_carbonmangels,MiniMol,Random Forest on GNN fingerprint,binary,pr-auc,0.424,0.023,"n_estimators=200, max_depth=None",complete
-cyp2c9_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.377,0.016,-,complete
+cyp2c9_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.377,0.016,combo selected: morgan_1024+xgb (no hyperparams tuned),complete
 cyp2c9_substrate_carbonmangels,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.43,0.015,"iterations=500, learning_rate=0.1",complete
 cyp2c9_substrate_carbonmangels,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,pr-auc,0.443,0.032,"lr=0.0001, epochs=30",complete
 cyp2c9_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.482,0.007,"lr=0.0005, epochs=50",complete
 cyp2c9_substrate_carbonmangels,BasicML,RandomForest,binary,pr-auc,0.388,0.05,"GradientBoosting: n_estimators=100, max_depth=5, learning_rate=0.1",complete
 cyp2d6_substrate_carbonmangels,MiniMol,Random Forest on GNN fingerprint,binary,pr-auc,0.713,0.006,"n_estimators=200, max_depth=10",complete
-cyp2d6_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.649,0.023,-,complete
+cyp2d6_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,pr-auc,0.649,0.023,combo selected: morgan_2048+xgb (no hyperparams tuned),complete
 cyp2d6_substrate_carbonmangels,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,pr-auc,0.717,0.006,"iterations=1000, learning_rate=0.1",complete
 cyp2d6_substrate_carbonmangels,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,pr-auc,0.738,0.016,"lr=0.001, epochs=20",complete
 cyp2d6_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,pr-auc,0.589,0.025,"lr=0.0005, epochs=50",complete
 cyp2d6_substrate_carbonmangels,BasicML,AdaBoost,binary,pr-auc,0.61,0.015,LogisticRegression: C=100,complete
 cyp3a4_substrate_carbonmangels,MiniMol,Random Forest on GNN fingerprint,binary,roc-auc,0.649,0.01,"n_estimators=100, max_depth=None",complete
-cyp3a4_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.634,0.01,-,complete
+cyp3a4_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.634,0.01,combo selected: morgan_1024+rf_100 (no hyperparams tuned),complete
 cyp3a4_substrate_carbonmangels,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.641,0.009,"iterations=2000, learning_rate=0.03",complete
 cyp3a4_substrate_carbonmangels,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,roc-auc,0.63,0.011,"lr=0.001, epochs=20",complete
 cyp3a4_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.598,0.011,"lr=0.0005, epochs=50",complete
 cyp3a4_substrate_carbonmangels,BasicML,LogisticRegression,binary,roc-auc,0.596,0.026,"XGBoost: n_estimators=100, max_depth=5, learning_rate=0.1",complete
 half_life_obach,MiniMol,Random Forest on GNN fingerprint,regression,spearman,0.383,0.027,"n_estimators=50, max_depth=None",complete
-half_life_obach,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.399,0.051,-,complete
+half_life_obach,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.399,0.051,combo selected: morgan_1024+rf_200 (no hyperparams tuned),complete
 half_life_obach,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,spearman,0.34,0.027,"iterations=1000, learning_rate=0.03",complete
 half_life_obach,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,spearman,0.186,0.202,"lr=0.0001, epochs=30",complete
 half_life_obach,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.06,0.039,"lr=0.0005, epochs=50",complete
 half_life_obach,BasicML,AdaBoost,regression,spearman,0.193,0.03,"Bagging: n_estimators=10, max_samples=0.5",complete
 clearance_hepatocyte_az,MiniMol,Random Forest on GNN fingerprint,regression,spearman,0.42,0.017,"n_estimators=100, max_depth=None",complete
-clearance_hepatocyte_az,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.273,0.009,-,complete
+clearance_hepatocyte_az,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.273,0.009,combo selected: morgan_2048+rf_100 (no hyperparams tuned),complete
 clearance_hepatocyte_az,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,spearman,0.513,0.019,"iterations=1000, learning_rate=0.1",complete
 clearance_hepatocyte_az,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,spearman,0.419,0.019,"lr=0.001, epochs=20",complete
 clearance_hepatocyte_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.259,0.039,"lr=0.0005, epochs=50",complete
 clearance_hepatocyte_az,BasicML,XGBoost,regression,spearman,0.325,0.039,"ExtraTrees: n_estimators=200, max_depth=10",complete
 clearance_microsome_az,MiniMol,Random Forest on GNN fingerprint,regression,spearman,0.592,0.009,"n_estimators=200, max_depth=None",complete
-clearance_microsome_az,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.43,0.008,-,complete
+clearance_microsome_az,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.43,0.008,combo selected: morgan_2048+rf_200 (no hyperparams tuned),complete
 clearance_microsome_az,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,spearman,0.583,0.021,"iterations=1000, learning_rate=0.1",complete
 clearance_microsome_az,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,spearman,0.612,0.014,"lr=0.001, epochs=20",complete
 clearance_microsome_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.469,0.023,"lr=0.0005, epochs=50",complete
 clearance_microsome_az,BasicML,GradientBoosting,regression,spearman,0.454,0.038,"Bagging: n_estimators=50, max_samples=1.0",complete
 ld50_zhu,MiniMol,Random Forest on GNN fingerprint,regression,mae,0.658,0.001,"n_estimators=200, max_depth=None",complete
-ld50_zhu,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,0.633,0.012,-,complete
+ld50_zhu,DeepMol,Random Forest / XGBoost (AutoML),regression,mae,0.633,0.012,combo selected: morgan_2048+rf_200 (no hyperparams tuned),complete
 ld50_zhu,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.597,0.004,"iterations=1000, learning_rate=0.1",complete
 ld50_zhu,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,mae,0.661,0.026,"lr=0.0001, epochs=30",complete
 ld50_zhu,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,0.631,0.024,"lr=0.0005, epochs=50",complete
 ld50_zhu,BasicML,ExtraTrees,regression,mae,0.655,0.005,"ExtraTrees: n_estimators=200, max_depth=None",complete
 herg,MiniMol,Random Forest on GNN fingerprint,binary,roc-auc,0.828,0.01,"n_estimators=200, max_depth=None",complete
-herg,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.762,0.023,-,complete
+herg,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.762,0.023,combo selected: morgan_2048+xgb (no hyperparams tuned),complete
 herg,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.869,0.004,"iterations=1000, learning_rate=0.03",complete
 herg,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,roc-auc,0.829,0.011,"lr=0.001, epochs=20",complete
 herg,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.839,0.007,"lr=0.001, epochs=20",complete
 herg,BasicML,GradientBoosting,binary,roc-auc,0.825,0.024,"ExtraTrees: n_estimators=200, max_depth=10",complete
 ames,MiniMol,Random Forest on GNN fingerprint,binary,roc-auc,0.824,0.005,"n_estimators=200, max_depth=None",complete
-ames,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.835,0.007,-,complete
+ames,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.835,0.007,combo selected: morgan_2048+xgb (no hyperparams tuned),complete
 ames,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.87,0.003,"iterations=2000, learning_rate=0.03",complete
 ames,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,roc-auc,0.851,0.005,"lr=0.001, epochs=20",complete
 ames,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.831,0.004,"lr=0.0005, epochs=50",complete
 ames,BasicML,XGBoost,binary,roc-auc,0.788,0.008,"XGBoost: n_estimators=200, max_depth=7, learning_rate=0.05",complete
 dili,MiniMol,Random Forest on GNN fingerprint,binary,roc-auc,0.901,0.008,"n_estimators=200, max_depth=10",complete
-dili,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.844,0.03,-,complete
+dili,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.844,0.03,combo selected: morgan_2048+rf_200 (no hyperparams tuned),complete
 dili,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.934,0.005,"iterations=1000, learning_rate=0.03",complete
 dili,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,roc-auc,0.932,0.008,"lr=0.001, epochs=20",complete
 dili,AttentiveFP,Graph Attention Network (trains from scratch),binary,roc-auc,0.914,0.007,"lr=0.0005, epochs=50",complete

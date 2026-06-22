@@ -16,7 +16,7 @@ cyp2d6_substrate_carbonmangels,AttrMasking,"Fine-tuned GIN (pre-trained, attribu
 cyp3a4_substrate_carbonmangels,MiniMol,Random Forest on GNN fingerprint,binary,roc-auc,0.649,0.01,"n_estimators=100, max_depth=None"
 half_life_obach,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.06,0.039,"lr=0.0005, epochs=50"
 clearance_hepatocyte_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,spearman,0.259,0.039,"lr=0.0005, epochs=50"
-clearance_microsome_az,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.43,0.008,-
+clearance_microsome_az,DeepMol,Random Forest / XGBoost (AutoML),regression,spearman,0.43,0.008,combo selected: morgan_2048+rf_200 (no hyperparams tuned)
 ld50_zhu,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.597,0.004,"iterations=1000, learning_rate=0.1"
 herg,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.869,0.004,"iterations=1000, learning_rate=0.03"
 ames,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.87,0.003,"iterations=2000, learning_rate=0.03"

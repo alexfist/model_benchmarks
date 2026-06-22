@@ -224,7 +224,9 @@ def _load_best_hyperparams(logs_dir, model_name, task):
     """
     Pull the best hyperparameter combo for a given model+task.
     Priority:
-      1. <model>/logs/<task>_tuning.json  → "best_params" field
+      1. <model>/logs/<task>_tuning.json → "best_params" dict (most models)
+         or "best_combo" string (DeepMol — featurizer+model selection, not
+         hyperparameter tuning)
       2. <model>/artifacts/<task>/hyperparams.json → "params" field
     Returns a compact string, or "-" if nothing found.
     """
@@ -233,12 +235,18 @@ def _load_best_hyperparams(logs_dir, model_name, task):
         try:
             with open(tuning_path) as f:
                 tuning = json.load(f)
-            best = tuning.get("best_params")
-            if best:
-                # BasicML/CaliciBoost-style: also carries a "best_model" / "best_combo" label
+
+            best_params = tuning.get("best_params")
+            if best_params:
                 label = tuning.get("best_model") or tuning.get("best_combo")
-                parts = ", ".join(f"{k}={v}" for k, v in best.items())
+                parts = ", ".join(f"{k}={v}" for k, v in best_params.items())
                 return f"{label}: {parts}" if label else parts
+
+            # DeepMol-style: no hyperparameter dict, just a selected combo
+            # (featurizer + model choice, not a tuned hyperparameter)
+            best_combo = tuning.get("best_combo")
+            if best_combo:
+                return f"combo selected: {best_combo} (no hyperparams tuned)"
         except Exception:
             pass
 
@@ -252,6 +260,10 @@ def _load_best_hyperparams(logs_dir, model_name, task):
                 algo = hp.get("algorithm")
                 parts = ", ".join(f"{k}={v}" for k, v in params.items())
                 return f"{algo}: {parts}" if algo else parts
+            # DeepMol artifact-only case
+            combo = hp.get("best_combo") or hp.get("algorithm")
+            if combo:
+                return f"combo selected: {combo} (no hyperparams tuned)"
         except Exception:
             pass
 
