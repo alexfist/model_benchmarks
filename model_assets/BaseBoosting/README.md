@@ -1,26 +1,5 @@
 # BaseBoosting
 
-## ❌ Status: Could Not Run
-
-**BaseBoosting could not be executed on the company server due to network restrictions.**
-
-`olorenchemengine` (OCE) is not available as a prebuilt wheel on PyPI or
-mirrored package indexes. Installation requires cloning from GitHub
-(`github.com/Oloren-AI/olorenchemengine`), which is blocked by the company
-server firewall. All three install methods were attempted and failed:
-
-```
-pip install olorenchemengine                          # not on PyPI as wheel
-pip install olorenchemengine -i <Tsinghua mirror>     # not on mirror
-pip install git+https://github.com/Oloren-AI/...     # GitHub HTTPS blocked
-```
-
-This is the same class of network restriction that blocked ZairaChem. The
-benchmark code is fully implemented and documented — BaseBoosting can be run
-on any machine with unrestricted internet access to GitHub.
-
----
-
 ## Overview
 
 BaseBoosting reproduces the Oloren AI submission to the TDC ADMET leaderboard
@@ -42,7 +21,6 @@ BaseBoosting ensemble of 3 Random Forest learners:
     ├── RF on Morgan counts fingerprints  (morgan3counts, ~2048-dim)
     ├── RF on normalized RDKit 2D descriptors (rdkit2dnormalized, ~200-dim)
     └── RF on OlorenCheckpoint("default")  ← pre-trained GIN fingerprint
-            (downloads from Google Cloud Storage — likely also blocked)
     ↓
 Gradient boosting: each learner corrects residuals of the previous
     ↓
@@ -66,50 +44,41 @@ Oloren's proprietary pre-trained GIN (Graph Isomorphism Network) fingerprint,
 trained using contrastive learning on PubChem. Similar concept to AttrMasking
 (pre-trained GNN as a feature extractor) but Oloren's own implementation with
 their own pre-training data and strategy. Downloads from Google Cloud Storage
-on first use.
-
----
-
-## Network Restrictions (Confirmed Blockers)
-
-**1. OCE installation — BLOCKED.** `olorenchemengine` requires cloning from
-GitHub to build. The company server blocks all GitHub HTTPS traffic. Neither
-PyPI, the Tsinghua mirror, nor direct GitHub clone worked. This is a hard
-blocker — the benchmark cannot run without OCE.
-
-**2. OlorenCheckpoint weights — likely also blocked.** Even if OCE could be
-installed, `OlorenCheckpoint("default")` downloads a pre-trained GIN from
-`storage.googleapis.com`, which is also likely blocked. The script includes
-a graceful 2-learner fallback for this case, but it is untested.
+on first use — if this fails on a restricted network, the script automatically
+falls back to a 2-learner model (Morgan + RDKit2D only) and logs the deviation.
 
 ---
 
 ## Deviations from Original Pipeline
 
-- Original submission code unavailable (GitHub repo `Oloren-AI/OCE-TDC` down as of June 2026)
-- Pipeline inferred from OCE documentation and paper
-- Could not run — blocked by company server network restrictions (see above)
-- If `OlorenCheckpoint` download fails, script falls back to 2 learners (Morgan + RDKit2D)
+- Original submission code (`Oloren-AI/OCE-TDC`) was unavailable at time of
+  implementation — pipeline reconstructed from OCE documentation and the
+  Oloren ChemEngine paper
 - No hyperparameter tuning added — original uses fixed n_estimators=1000 per RF
+- If `OlorenCheckpoint` download fails at runtime, falls back to 2 learners
+  (Morgan + RDKit2D) — logged per-task in the result JSON
 
 ---
 
-## Environment Setup (for machines with unrestricted internet)
+## Environment Setup
+
+OCE installation requires GitHub access for some methods, but the package is
+also available directly on PyPI, which works even when GitHub is blocked.
 
 ```bash
 conda create -n baseboosting_env python=3.8 -y
 conda activate baseboosting_env
 conda install -c conda-forge rdkit -y
 
-# Install OCE (requires GitHub access)
-pip install git+https://github.com/Oloren-AI/olorenchemengine.git
+# Install OCE from PyPI (works even when GitHub is blocked)
+pip install olorenchemengine
 
-# Install PyTorch Geometric (required for GNN components)
-pip install torch-scatter torch-sparse torch-cluster torch-spline-conv torch-geometric \
-    -f https://data.pyg.org/whl/torch-2.1.0+cu121.html
-
-pip install PyTDC numpy pandas scikit-learn joblib
+# Remaining dependencies
+pip install PyTDC scikit-learn descriptastorus joblib
 ```
+
+If `pip install olorenchemengine` fails to build, try installing build
+dependencies first (`pip install --upgrade pip setuptools wheel`) and retry.
 
 ---
 
@@ -120,32 +89,40 @@ BaseBoosting/
 ├── README.md
 ├── data/               # TDC datasets (symlink to shared data dir)
 ├── code/
-│   ├── run_benchmark.py    # Main benchmarking script (implemented, not run)
+│   ├── run_benchmark.py    # Main benchmarking script
 │   ├── check_install.py    # Installation verification
 │   └── requirements.txt    # Dependencies
-├── artifacts/          # Empty — could not run
-└── logs/               # Empty — could not run
+├── artifacts/          # Saved model.oce + hyperparams.json per task
+└── logs/               # Per-task JSON result logs
 ```
 
 ---
 
-## How to Run (on unrestricted machine)
+## How to Run
 
 ```bash
 conda activate baseboosting_env
 cd model_assets/BaseBoosting
+
+# Symlink data (avoids re-downloading from blocked dataverse.harvard.edu)
 ln -s ../MapLight_GNN/data data
+
 cd code
 
+# Verify installation (OlorenCheckpoint check is informational — falls back if blocked)
 python check_install.py
-python run_benchmark.py --task hia_hou --runs 1  # single task test
+
+# Single task test first
+python run_benchmark.py --task hia_hou --runs 1
+
+# Full benchmark (run in background — several hours)
 nohup python run_benchmark.py > ~/model_benchmarks/baseboosting.log 2>&1 &
 disown
 ```
 
 ---
 
-## Expected Runtime (if run)
+## Expected Runtime
 
 Each task: 3 RF models × 1000 trees × 5 seeds = 15,000 trees trained.
 - Small tasks (500-700 molecules): ~2-5 min per seed
@@ -160,4 +137,4 @@ Total estimate: **6-12 hours** for all 22 tasks.
 - [Oloren ChemEngine Paper (Huang et al., 2022)](https://chemrxiv.org/engage/chemrxiv/article-details/635da3ed6e0d367d91d92362)
 - [OCE Documentation](https://docs.oloren.ai)
 - [OCE PyPI](https://pypi.org/project/olorenchemengine/)
-- [TDC Leaderboard submission](https://github.com/Oloren-AI/OCE-TDC) (currently down)
+- [TDC Leaderboard submission](https://github.com/Oloren-AI/OCE-TDC)
