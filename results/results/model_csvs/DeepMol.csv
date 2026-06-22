@@ -1,0 +1,23 @@
+benchmark,model,algorithm,task_type,leaderboard_metric,score,std,status
+caco2_wang,DeepMol,Random Forest / XGBoost (AutoML),regression,-,-,-,pending
+hia_hou,DeepMol,Random Forest / XGBoost (AutoML),binary,-,-,-,pending
+pgp_broccatelli,DeepMol,Random Forest / XGBoost (AutoML),binary,-,-,-,pending
+bioavailability_ma,DeepMol,Random Forest / XGBoost (AutoML),binary,-,-,-,pending
+lipophilicity_astrazeneca,DeepMol,Random Forest / XGBoost (AutoML),regression,-,-,-,pending
+solubility_aqsoldb,DeepMol,Random Forest / XGBoost (AutoML),regression,-,-,-,pending
+bbb_martins,DeepMol,Random Forest / XGBoost (AutoML),binary,-,-,-,pending
+ppbr_az,DeepMol,Random Forest / XGBoost (AutoML),regression,-,-,-,pending
+vdss_lombardo,DeepMol,Random Forest / XGBoost (AutoML),regression,-,-,-,pending
+cyp2d6_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,-,-,-,pending
+cyp3a4_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,-,-,-,pending
+cyp2c9_veith,DeepMol,Random Forest / XGBoost (AutoML),binary,-,-,-,pending
+cyp2c9_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,-,-,-,pending
+cyp2d6_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,-,-,-,pending
+cyp3a4_substrate_carbonmangels,DeepMol,Random Forest / XGBoost (AutoML),binary,-,-,-,pending
+half_life_obach,DeepMol,Random Forest / XGBoost (AutoML),regression,-,-,-,pending
+clearance_hepatocyte_az,DeepMol,Random Forest / XGBoost (AutoML),regression,-,-,-,pending
+clearance_microsome_az,DeepMol,Random Forest / XGBoost (AutoML),regression,-,-,-,pending
+ld50_zhu,DeepMol,Random Forest / XGBoost (AutoML),regression,-,-,-,pending
+herg,DeepMol,Random Forest / XGBoost (AutoML),binary,-,-,-,pending
+ames,DeepMol,Random Forest / XGBoost (AutoML),binary,-,-,-,pending
+dili,DeepMol,Random Forest / XGBoost (AutoML),binary,-,-,-,pending

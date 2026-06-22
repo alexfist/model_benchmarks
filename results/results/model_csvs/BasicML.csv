@@ -1,0 +1,23 @@
+benchmark,model,algorithm,task_type,leaderboard_metric,score,std,status
+caco2_wang,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
+hia_hou,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+pgp_broccatelli,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+bioavailability_ma,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+lipophilicity_astrazeneca,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
+solubility_aqsoldb,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
+bbb_martins,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+ppbr_az,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
+vdss_lombardo,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
+cyp2d6_veith,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+cyp3a4_veith,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+cyp2c9_veith,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+cyp2c9_substrate_carbonmangels,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+cyp2d6_substrate_carbonmangels,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+cyp3a4_substrate_carbonmangels,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+half_life_obach,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
+clearance_hepatocyte_az,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
+clearance_microsome_az,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
+ld50_zhu,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,regression,-,-,-,pending
+herg,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+ames,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending
+dili,BasicML,Best of 10 sklearn/XGBoost models on 31 RDKit descriptors,binary,-,-,-,pending

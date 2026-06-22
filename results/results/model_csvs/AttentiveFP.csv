@@ -1,0 +1,23 @@
+benchmark,model,algorithm,task_type,leaderboard_metric,score,std,status
+caco2_wang,AttentiveFP,Graph Attention Network (trains from scratch),regression,-,-,-,pending
+hia_hou,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
+pgp_broccatelli,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
+bioavailability_ma,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
+lipophilicity_astrazeneca,AttentiveFP,Graph Attention Network (trains from scratch),regression,-,-,-,pending
+solubility_aqsoldb,AttentiveFP,Graph Attention Network (trains from scratch),regression,-,-,-,pending
+bbb_martins,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
+ppbr_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,-,-,-,pending
+vdss_lombardo,AttentiveFP,Graph Attention Network (trains from scratch),regression,-,-,-,pending
+cyp2d6_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
+cyp3a4_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
+cyp2c9_veith,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
+cyp2c9_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
+cyp2d6_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
+cyp3a4_substrate_carbonmangels,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
+half_life_obach,AttentiveFP,Graph Attention Network (trains from scratch),regression,-,-,-,pending
+clearance_hepatocyte_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,-,-,-,pending
+clearance_microsome_az,AttentiveFP,Graph Attention Network (trains from scratch),regression,-,-,-,pending
+ld50_zhu,AttentiveFP,Graph Attention Network (trains from scratch),regression,-,-,-,pending
+herg,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
+ames,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
+dili,AttentiveFP,Graph Attention Network (trains from scratch),binary,-,-,-,pending
