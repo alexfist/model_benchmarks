@@ -1,5 +1,5 @@
 benchmark,best_model,algorithm,task_type,leaderboard_metric,score,std
-caco2_wang,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,regression,mae,0.295,0.004
+caco2_wang,CaliciBoost,XGBoost on top-ranked PaDEL descriptors (Caco-2 only),regression,mae,0.269,0.004
 hia_hou,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.988,0.002
 pgp_broccatelli,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",binary,roc-auc,0.935,0.005
 bioavailability_ma,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.726,0.005

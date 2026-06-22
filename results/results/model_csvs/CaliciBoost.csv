@@ -1,2 +1,0 @@
-benchmark,model,algorithm,task_type,leaderboard_metric,score,std,status
-caco2_wang,CaliciBoost,XGBoost on top-ranked PaDEL descriptors (Caco-2 only),regression,-,-,-,pending

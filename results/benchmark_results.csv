@@ -5,7 +5,7 @@ caco2_wang,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,r
 caco2_wang,AttrMasking,"Fine-tuned GIN (pre-trained, attribute masking)",regression,mae,0.422,0.032,complete
 caco2_wang,AttentiveFP,Graph Attention Network (trains from scratch),regression,mae,0.346,0.006,complete
 caco2_wang,BasicML,ExtraTrees,regression,mae,0.353,0.083,complete
-caco2_wang,CaliciBoost,XGBoost on top-ranked PaDEL descriptors (Caco-2 only),regression,-,-,-,pending
+caco2_wang,CaliciBoost,XGBoost on top-ranked PaDEL descriptors (Caco-2 only),regression,mae,0.269,0.004,complete
 hia_hou,MiniMol,Random Forest on GNN fingerprint,binary,roc-auc,0.945,0.007,complete
 hia_hou,DeepMol,Random Forest / XGBoost (AutoML),binary,roc-auc,0.942,0.013,complete
 hia_hou,MapLight_GNN,CatBoost on concatenated fingerprints + GIN embeddings,binary,roc-auc,0.988,0.002,complete
