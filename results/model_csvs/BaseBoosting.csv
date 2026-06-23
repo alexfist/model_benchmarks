@@ -1,2 +1,23 @@
 benchmark,model,algorithm,task_type,leaderboard_metric,score,std,best_hyperparams,status
--,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),-,-,-,-,-,could_not_run
+caco2_wang,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),regression,mae,0.318,0.002,-,complete
+hia_hou,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),binary,roc-auc,0.972,0.001,-,complete
+pgp_broccatelli,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),binary,roc-auc,0.934,0.001,-,complete
+bioavailability_ma,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),binary,roc-auc,0.691,0.003,-,complete
+lipophilicity_astrazeneca,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),regression,mae,0.685,0.002,-,complete
+solubility_aqsoldb,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),regression,mae,0.875,0.001,-,complete
+bbb_martins,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),binary,roc-auc,0.915,0.001,-,complete
+ppbr_az,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),regression,mae,9.0,0.017,-,complete
+vdss_lombardo,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),regression,spearman,0.535,0.006,-,complete
+cyp2d6_veith,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),binary,pr-auc,0.695,0.001,-,complete
+cyp3a4_veith,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),binary,pr-auc,0.861,0.0,-,complete
+cyp2c9_veith,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),binary,pr-auc,0.772,0.001,-,complete
+cyp2c9_substrate_carbonmangels,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),binary,pr-auc,0.411,0.013,-,complete
+cyp2d6_substrate_carbonmangels,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),binary,pr-auc,0.702,0.004,-,complete
+cyp3a4_substrate_carbonmangels,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),binary,roc-auc,0.67,0.004,-,complete
+half_life_obach,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),regression,spearman,0.407,0.015,-,complete
+clearance_hepatocyte_az,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),regression,spearman,0.476,0.006,-,complete
+clearance_microsome_az,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),regression,spearman,0.61,0.005,-,complete
+ld50_zhu,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),regression,mae,0.644,0.0,-,complete
+herg,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),binary,roc-auc,0.851,0.002,-,complete
+ames,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),binary,roc-auc,0.853,0.001,-,complete
+dili,BaseBoosting,Gradient-boosted ensemble of 3 RFs (Morgan + RDKit2D + GIN),binary,roc-auc,0.926,0.003,-,complete

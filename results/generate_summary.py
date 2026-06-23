@@ -55,17 +55,7 @@ BLOCKED_MODELS = {
             "Only eos5axz (deterministic Morgan fingerprints) could be fetched.",
             "ZairaChem can only be run in an environment with unrestricted internet access.",
         ]
-    ),
-    "BaseBoosting": (
-        "BaseBoosting — Could Not Run",
-        [
-            "Reason: olorenchemengine (OCE) is not available as a prebuilt wheel on PyPI.",
-            "Installation requires cloning from GitHub (github.com/Oloren-AI/olorenchemengine),",
-            "which is blocked by the company server firewall.",
-            "All three install methods attempted: pip, Tsinghua mirror, git clone — all failed.",
-            "BaseBoosting can only be run on a machine with unrestricted internet access to GitHub.",
-        ]
-    ),
+    )
 }
 
 # CaliciBoost only covers caco2_wang
